@@ -1,15 +1,8 @@
 
 ### Android template
 # Built application files
-*.apk
-*.ap_
-
 # Files for the ART/Dalvik VM
-*.dex
-
 # Java class files
-*.class
-
 # Generated files
 bin/
 gen/
@@ -78,7 +71,6 @@ hs_err_pid*
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
-.idea/**/workspace.xml
 .idea/**/tasks.xml
 
 # Sensitive or high-churn files:
@@ -91,9 +83,6 @@ hs_err_pid*
 .idea/**/uiDesigner.xml
 
 # Gradle:
-.idea/**/gradle.xml
-.idea/**/libraries
-
 # CMake
 cmake-build-debug/
 
@@ -121,3 +110,4 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+/specyfikacja.odt

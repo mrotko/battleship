@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutChooseGameTypeComputer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/rgChooseComputerStrength"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/btnComputerBeginner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="8sp"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:text="@string/beginner"
+            android:textSize="24sp"
+            tools:layout_editor_absoluteX="75dp"
+            tools:layout_editor_absoluteY="146dp"
+            tools:text="@string/beginner" />
+
+        <RadioButton
+            android:id="@+id/btnComputerNormal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:text="@string/normal"
+            android:textSize="24sp"
+            tools:layout_editor_absoluteX="112dp"
+            tools:layout_editor_absoluteY="84dp"
+            tools:text="@string/normal" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnChooseGameType"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/choose"
+        tools:text="@string/choose" />
+</LinearLayout>

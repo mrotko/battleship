@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">battleship</string>
+    <string name="vibration">Wibracje</string>
+    <string name="settings">Ustawienia</string>
+    <string name="sounds">Dźwięki</string>
+    <string name="exit">Wyjście</string>
+    <string name="play">Graj</string>
+    <string name="playViaWifi">Graj przez wifi</string>
+    <string name="playWithComputer">Graj z komputerem</string>
+    <string name="choose">Wybierz</string>
+    <string name="normal">Normalny</string>
+    <string name="beginner">Początkujący</string>
+    <string name="battleship">Gra w statki</string>
+</resources>
