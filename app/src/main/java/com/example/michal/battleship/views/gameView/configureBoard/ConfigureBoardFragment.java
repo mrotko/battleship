@@ -92,7 +92,7 @@ public class ConfigureBoardFragment extends Fragment {
                 gameActivity.setGameState(GameState.BOARD_CONFIGURED);
                 gameActivity.getMe().setBoard(boardView.getBoard());
                 getFragmentManager().beginTransaction().remove(this).commit();
-                gameActivity.controller();
+                gameActivity.doThings();
             }
         });
     }

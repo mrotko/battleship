@@ -13,13 +13,15 @@ import com.example.michal.battleship.R;
 import com.example.michal.battleship.views.gameView.GameActivity;
 import com.example.michal.battleship.views.gameView.GameState;
 
+import java.util.Optional;
+
 /**
  * Created by michal on 18.12.17.
  */
 
 public class EndGameFragment extends Fragment {
 
-    private GameActivity gameActivity;
+    private GameActivity gameController;
 
     private Button endGameBtn;
 
@@ -28,7 +30,7 @@ public class EndGameFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        gameActivity = (GameActivity) getActivity();
+        gameController = (GameActivity) getActivity();
     }
 
     @Nullable
@@ -50,16 +52,25 @@ public class EndGameFragment extends Fragment {
     }
 
     private void createEndGameBtn() {
-
+        Optional.ofNullable(getView()).ifPresent(view -> {
+            endGameBtn = view.findViewById(R.id.btnEndGame);
+            endGameBtn.setOnClickListener(v -> {
+                getFragmentManager().beginTransaction().remove(this).commit();
+                gameController.setGameState(GameState.EXIT);
+                gameController.doThings();
+            });
+        });
     }
 
     private void createRevengeBtn() {
-        revengeBtn = getView().findViewById(R.id.btnRevenge);
-        revengeBtn.setOnClickListener(view -> {
+        Optional.ofNullable(getView()).ifPresent(view -> {
+            revengeBtn = view.findViewById(R.id.btnRevenge);
+            revengeBtn.setOnClickListener(v -> {
 //            TODO komunikacja z serwerem i oczekiwanie aż z drugiej strony będzie potwierdzenie
-            getFragmentManager().beginTransaction().remove(this).commit();
-            gameActivity.setGameState(GameState.REVENGE);
-            gameActivity.controller();
+                getFragmentManager().beginTransaction().remove(this).commit();
+                gameController.setGameState(GameState.REVENGE);
+                gameController.doThings();
+            });
         });
     }
 }

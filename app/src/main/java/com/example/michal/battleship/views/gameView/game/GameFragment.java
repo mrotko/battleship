@@ -93,9 +93,9 @@ public class GameFragment extends Fragment {
     }
 
     private void endGame() {
-        gameActivity.setGameState(GameState.REVENGE);
+        gameActivity.setGameState(GameState.END_GAME);
         getFragmentManager().beginTransaction().remove(this).commit();
-        gameActivity.controller();
+        gameActivity.doThings();
     }
 
     private void createOpponentBoard() {

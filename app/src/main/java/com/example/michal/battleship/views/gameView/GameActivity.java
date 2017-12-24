@@ -46,7 +46,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         init();
-        controller();
+        doThings();
     }
 
     private void init() {
@@ -80,7 +80,7 @@ public class GameActivity extends AppCompatActivity {
         this.gameState = gameState;
     }
 
-    public void controller() {
+    public void doThings() {
         switch (gameState) {
             case CHOOSE_GAME_TYPE:
                 startChooseGameTypeFragment();
@@ -90,14 +90,14 @@ public class GameActivity extends AppCompatActivity {
                 communication.sendMe(me);
                 opponent = communication.retrieveOpponent();
                 setGameState(GameState.CONFIGURE_BOARD);
-                controller();
+                doThings();
                 break;
             case CONFIGURE_BOARD:
                 startConfigureBoardFragment();
                 break;
             case BOARD_CONFIGURED:
                 setGameState(GameState.START_GAME);
-                controller();
+                doThings();
                 break;
             case START_GAME:
                 startGameFragment();
@@ -107,7 +107,7 @@ public class GameActivity extends AppCompatActivity {
                 break;
             case REVENGE:
                 setGameState(GameState.CONFIGURE_BOARD);
-                controller();
+                doThings();
                 break;
             case EXIT:
 //                TODO pewnie potrzebne sprzątanie
