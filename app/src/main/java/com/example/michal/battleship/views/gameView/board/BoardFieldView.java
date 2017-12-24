@@ -49,6 +49,7 @@ public class BoardFieldView extends FrameLayout {
     public void setFieldStatus(FieldStatus fieldStatus) {
         Optional.ofNullable(getFieldType())
                 .ifPresent(field -> field.setFieldStatus(fieldStatus));
+        redraw();
     }
 
     public FieldType getFieldType() {

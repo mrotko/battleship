@@ -87,6 +87,7 @@ public abstract class ComputerCommunication implements ICommunication {
                 int currentFieldId = coordinates.getShipHeadFieldId();
                 for (BoardField field : dragShipDTO.getShip().getFields()) {
                     field.setId(currentFieldId);
+                    field.setRowId(currentRowId);
                     BoardRow currentRow = board.getRows().get(currentRowId);
                     currentRow.getFields().set(currentFieldId, field);
 

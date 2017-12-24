@@ -7,6 +7,8 @@ import android.view.DragEvent;
 import android.widget.LinearLayout;
 
 import com.example.michal.battleship.R;
+import com.example.michal.battleship.views.gameView.board.fieldType.FieldStatus;
+import com.example.michal.battleship.views.gameView.board.ship.Direction;
 import com.example.michal.battleship.views.gameView.board.ship.Ship;
 import com.example.michal.battleship.views.gameView.configureBoard.DragShipDTO;
 import com.example.michal.battleship.utils.validator.DragCoordinatesCalculator;
@@ -16,6 +18,7 @@ import com.example.michal.battleship.utils.validator.IValidator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
@@ -39,6 +42,7 @@ public class BoardView extends LinearLayout {
         inflate(getContext(), R.layout.layout_board, this);
         boardLL = findViewById(R.id.llBoard);
         redraw();
+        createShipSunkedListener();
     }
 
     public void redraw() {
@@ -50,6 +54,59 @@ public class BoardView extends LinearLayout {
         });
 
         createBoardFieldsDragListener();
+    }
+
+    private void createShipSunkedListener() {
+        board.getShips().forEach(ship -> {
+            ship.getFields().forEach(boardField -> {
+                boardField.getFieldType().addPropertyChangeListener(event -> {
+                    if(event.getNewValue().equals(FieldStatus.HIT) &&
+                            ship.isSunken()) {
+                        showFieldsAroundSunkedShip(ship);
+                    }
+                });
+            });
+        });
+    }
+
+    private void showFieldsAroundSunkedShip(Ship ship) {
+        List<Integer> rowIdRange = new ArrayList<>();
+        List<Integer> fieldIdRange = new ArrayList<>();
+        BoardField shipHeadBoardField = ship.getFields().get(0);
+
+        if(ship.getDirection().equals(Direction.VERTICAL)) {
+            rowIdRange = IntStream.rangeClosed(shipHeadBoardField.getRowId() - 1, shipHeadBoardField.getRowId() + ship.getSize())
+                    .filter(id -> id >= 0)
+                    .filter(id -> id < board.getColumnLength())
+                    .boxed()
+                    .collect(Collectors.toList());
+            fieldIdRange = IntStream.rangeClosed(shipHeadBoardField.getId() - 1, shipHeadBoardField.getId() + 1)
+                    .filter(id -> id >= 0)
+                    .filter(id -> id < board.getRowLength())
+                    .boxed()
+                    .collect(Collectors.toList());
+        } else if(ship.getDirection().equals(Direction.HORIZONTAL)) {
+            rowIdRange = IntStream.rangeClosed(shipHeadBoardField.getRowId() - 1, shipHeadBoardField.getRowId() + 1)
+                    .filter(id -> id >= 0)
+                    .filter(id -> id < board.getColumnLength())
+                    .boxed()
+                    .collect(Collectors.toList());
+            fieldIdRange = IntStream.rangeClosed(shipHeadBoardField.getId() - 1, shipHeadBoardField.getId() + ship.getSize())
+                    .filter(id -> id >= 0)
+                    .filter(id -> id < board.getRowLength())
+                    .boxed()
+                    .collect(Collectors.toList());
+        }
+
+        for (Integer rowId : rowIdRange) {
+            for(Integer fieldId : fieldIdRange) {
+                BoardFieldView boardFieldView = getChildRowViews().get(rowId)
+                        .getChildBoardFieldViews().get(fieldId);
+                if(boardFieldView.getFieldType().getFieldStatus().equals(FieldStatus.HIDDEN)) {
+                    boardFieldView.setFieldStatus(FieldStatus.VISIBLE);
+                }
+            }
+        }
     }
 
 
@@ -157,6 +214,7 @@ public class BoardView extends LinearLayout {
 
             for (BoardField field : dragShipDTO.getShip().getFields()) {
                 field.setId(currentFieldId);
+                field.setRowId(currentRowId);
                 BoardRow currentRow = board.getRows().get(currentRowId);
                 currentRow.getFields().set(currentFieldId, field);
 

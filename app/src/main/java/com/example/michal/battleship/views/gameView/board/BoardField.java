@@ -12,9 +12,9 @@ import java.beans.PropertyChangeSupport;
 
 public class BoardField extends SimpleObject {
 
-    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
-
     private FieldType fieldType;
+
+    private int rowId;
 
     private boolean active;
 
@@ -42,5 +42,13 @@ public class BoardField extends SimpleObject {
 
     public void hit() {
         fieldType.hit();
+    }
+
+    public void setRowId(int rowId) {
+        this.rowId = rowId;
+    }
+
+    public int getRowId(){
+        return this.rowId;
     }
 }
