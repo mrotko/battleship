@@ -2,6 +2,7 @@ package com.example.michal.battleship.views.gameView.endGame;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,6 +14,9 @@ import com.example.michal.battleship.R;
 import com.example.michal.battleship.views.gameView.GameActivity;
 import com.example.michal.battleship.views.gameView.GameState;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -55,6 +59,7 @@ public class EndGameFragment extends Fragment {
         Optional.ofNullable(getView()).ifPresent(view -> {
             endGameBtn = view.findViewById(R.id.btnEndGame);
             endGameBtn.setOnClickListener(v -> {
+                gameController.getCommunication().sendRevenge(false);
                 getFragmentManager().beginTransaction().remove(this).commit();
                 gameController.setGameState(GameState.EXIT);
                 gameController.doThings();
@@ -66,7 +71,7 @@ public class EndGameFragment extends Fragment {
         Optional.ofNullable(getView()).ifPresent(view -> {
             revengeBtn = view.findViewById(R.id.btnRevenge);
             revengeBtn.setOnClickListener(v -> {
-//            TODO komunikacja z serwerem i oczekiwanie aż z drugiej strony będzie potwierdzenie
+                gameController.getCommunication().sendRevenge(true);
                 getFragmentManager().beginTransaction().remove(this).commit();
                 gameController.setGameState(GameState.REVENGE);
                 gameController.doThings();

@@ -21,6 +21,8 @@ import com.example.michal.battleship.views.gameView.board.fieldType.ShipFieldTyp
 import com.example.michal.battleship.views.gameView.board.fieldType.WaterFieldType;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by michal on 18.12.17.
@@ -37,6 +39,8 @@ public class GameFragment extends Fragment {
     private BoardView myBoardView;
 
     private BoardView opponentBoardView;
+
+    private List<AsyncTask<Void, Void, Void>> workingAsyncTasks = new ArrayList<>();
 
     @Override
     public void onAttach(Context context) {
@@ -87,15 +91,20 @@ public class GameFragment extends Fragment {
     }
 
     private void opponentShipHit() {
-        if(gameActivity.getOpponent().getBoard().isEndGame()) {
+        if(opponentBoardView.getBoard().isEndGame()) {
             endGame();
         }
     }
 
     private void endGame() {
+        waitUntilTasksEnd();
         gameActivity.setGameState(GameState.END_GAME);
         getFragmentManager().beginTransaction().remove(this).commit();
         gameActivity.doThings();
+    }
+
+    public void waitUntilTasksEnd() {
+        while (workingAsyncTasks.size() > 0) {}
     }
 
     private void createOpponentBoard() {
@@ -150,13 +159,13 @@ public class GameFragment extends Fragment {
     private void prepareForOpponentMove() {
         opponentBoardView.setBackgroundColor(getResources().getColor(R.color.boardViewBackgroundNormal, null));
         myBoardView.setBackgroundColor(getResources().getColor(R.color.boardViewBackgroundMove, null));
-        gameActivity.getOpponent().getBoard().setActiveToAll(false);
+        opponentBoardView.getBoard().setActiveToAll(false);
     }
 
     private void prepareForMyMove() {
         opponentBoardView.setBackgroundColor(getResources().getColor(R.color.boardViewBackgroundMove, null));
         myBoardView.setBackgroundColor(getResources().getColor(R.color.boardViewBackgroundNormal, null));
-        gameActivity.getOpponent().getBoard().setActiveToAll(true);
+        opponentBoardView.getBoard().setActiveToAll(true);
     }
 
     public void setFirstMove(boolean myMove) {
@@ -180,6 +189,11 @@ public class GameFragment extends Fragment {
         }
 
         @Override
+        protected void onPreExecute() {
+            gameFragment.get().workingAsyncTasks.add(this);
+        }
+
+        @Override
         protected Void doInBackground(Void... voids) {
             MoveDTO moveDTO = gameFragment.get().gameActivity.getCommunication().retrieveMove();
             rowId = moveDTO.getRowId();
@@ -192,6 +206,7 @@ public class GameFragment extends Fragment {
             super.onPostExecute(aVoid);
             gameFragment.get().myBoardView.getBoard().getRows().get(rowId).getFields().get(fieldId).hit();
             gameFragment.get().myBoardView.redraw();
+            gameFragment.get().workingAsyncTasks.remove(this);
         }
     }
 }

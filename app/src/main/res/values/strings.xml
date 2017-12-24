@@ -96,4 +96,5 @@
     <string name="nothingToDo">Nothing to do</string>
     <string name="end">End</string>
     <string name="revenge">Revenge</string>
+    <string name="opponentLeftGame">Opponent left game</string>
 </resources>

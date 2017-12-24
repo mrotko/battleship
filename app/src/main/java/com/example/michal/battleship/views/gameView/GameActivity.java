@@ -14,12 +14,15 @@ import com.example.michal.battleship.connection.IConnectionService;
 import com.example.michal.battleship.connection.communication.ICommunication;
 import com.example.michal.battleship.model.Player;
 import com.example.michal.battleship.model.User;
+import com.example.michal.battleship.utils.SnackbarFactory;
 import com.example.michal.battleship.views.MainActivity;
 import com.example.michal.battleship.views.gameView.chooseGameType.ChooseGameTypeFragment;
 import com.example.michal.battleship.views.gameView.chooseGameType.GameTypeOption;
 import com.example.michal.battleship.views.gameView.configureBoard.ConfigureBoardFragment;
 import com.example.michal.battleship.views.gameView.endGame.EndGameFragment;
 import com.example.michal.battleship.views.gameView.game.GameFragment;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by michal on 18.12.17.
@@ -106,7 +109,16 @@ public class GameActivity extends AppCompatActivity {
                 startEndGameFragment();
                 break;
             case REVENGE:
-                setGameState(GameState.CONFIGURE_BOARD);
+                if(getCommunication().retrieveRevenge()) {
+                    setGameState(GameState.CONFIGURE_BOARD);
+                } else {
+                    SnackbarFactory.getInfo(gameActivityLL, getResources().getString(R.string.opponentLeftGame));
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 doThings();
                 break;
             case EXIT:
