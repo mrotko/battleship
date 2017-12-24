@@ -118,7 +118,7 @@ public class GameFragment extends Fragment {
     }
 
     private BoardView createPreparedOpponentBoardView() {
-        Board board = gameActivity.getOpponent().getBoard();
+        Board board = new Board(gameActivity.getOpponent().getBoard().getShips());
         board.setFieldStatusToAll(FieldStatus.HIDDEN);
         board.setActiveToAll(true);
         board.setFieldStatusListener(event -> {

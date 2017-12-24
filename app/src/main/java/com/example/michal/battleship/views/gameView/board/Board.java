@@ -2,6 +2,7 @@ package com.example.michal.battleship.views.gameView.board;
 
 import com.example.michal.battleship.model.SimpleObject;
 import com.example.michal.battleship.views.gameView.board.fieldType.FieldStatus;
+import com.example.michal.battleship.views.gameView.board.fieldType.ShipFieldType;
 import com.example.michal.battleship.views.gameView.board.fieldType.WaterFieldType;
 import com.example.michal.battleship.views.gameView.board.ship.Ship;
 
@@ -30,16 +31,31 @@ public class Board extends SimpleObject {
         createTable();
     }
 
+    public Board(List<Ship> ships) {
+        super();
+        this.ships = ships;
+        createTable();
+    }
+
     public void createTable() {
         IntStream
                 .range(0, COLUMN_LENGTH)
                 .forEach(i -> boardRows.add(createBoardRow(i)));
+        applyShips();
+    }
+
+    private void applyShips() {
+        ships.forEach(ship -> ship.getFields().forEach(boardField -> {
+            boardRows.get(boardField.getRowId())
+                    .getFields().set(boardField.getId(), boardField);
+        }));
     }
 
     private BoardRow createBoardRow(int id) {
         BoardRow boardRow = new BoardRow(id);
         IntStream.range(0, ROW_LENGTH).forEach(i -> {
             BoardField boardField = new BoardField(i);
+            boardField.setRowId(id);
             boardField.setFieldType(new WaterFieldType());
             boardRow.getFields().add(boardField);
         });
@@ -93,4 +109,9 @@ public class Board extends SimpleObject {
     public boolean isEndGame() {
         return ships.stream().allMatch(Ship::isSunken);
     }
+
+    public void setShips(List<Ship> ships) {
+        this.ships = ships;
+    }
+
 }
