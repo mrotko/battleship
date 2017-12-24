@@ -2,6 +2,7 @@ package com.example.michal.battleship.views.gameView.endGame;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,13 +14,18 @@ import com.example.michal.battleship.R;
 import com.example.michal.battleship.views.gameView.GameActivity;
 import com.example.michal.battleship.views.gameView.GameState;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 /**
  * Created by michal on 18.12.17.
  */
 
 public class EndGameFragment extends Fragment {
 
-    private GameActivity gameActivity;
+    private GameActivity gameController;
 
     private Button endGameBtn;
 
@@ -28,7 +34,7 @@ public class EndGameFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        gameActivity = (GameActivity) getActivity();
+        gameController = (GameActivity) getActivity();
     }
 
     @Nullable
@@ -50,16 +56,26 @@ public class EndGameFragment extends Fragment {
     }
 
     private void createEndGameBtn() {
-
+        Optional.ofNullable(getView()).ifPresent(view -> {
+            endGameBtn = view.findViewById(R.id.btnEndGame);
+            endGameBtn.setOnClickListener(v -> {
+                gameController.getCommunication().sendRevenge(false);
+                getFragmentManager().beginTransaction().remove(this).commit();
+                gameController.setGameState(GameState.EXIT);
+                gameController.doThings();
+            });
+        });
     }
 
     private void createRevengeBtn() {
-        revengeBtn = getView().findViewById(R.id.btnRevenge);
-        revengeBtn.setOnClickListener(view -> {
-//            TODO komunikacja z serwerem i oczekiwanie aż z drugiej strony będzie potwierdzenie
-            getFragmentManager().beginTransaction().remove(this).commit();
-            gameActivity.setGameState(GameState.REVENGE);
-            gameActivity.controller();
+        Optional.ofNullable(getView()).ifPresent(view -> {
+            revengeBtn = view.findViewById(R.id.btnRevenge);
+            revengeBtn.setOnClickListener(v -> {
+                gameController.getCommunication().sendRevenge(true);
+                getFragmentManager().beginTransaction().remove(this).commit();
+                gameController.setGameState(GameState.REVENGE);
+                gameController.doThings();
+            });
         });
     }
 }

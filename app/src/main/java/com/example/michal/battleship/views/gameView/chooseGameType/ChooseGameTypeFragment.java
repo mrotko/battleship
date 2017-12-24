@@ -10,9 +10,6 @@ import android.widget.LinearLayout;
 
 import com.example.michal.battleship.R;
 import com.example.michal.battleship.connection.communication.ICommunication;
-import com.example.michal.battleship.model.Player;
-import com.example.michal.battleship.model.User;
-import com.example.michal.battleship.views.gameView.board.Board;
 import com.example.michal.battleship.views.gameView.chooseGameType.view.ExpandedWidget;
 import com.example.michal.battleship.views.gameView.GameActivity;
 import com.example.michal.battleship.views.gameView.GameState;
@@ -68,7 +65,7 @@ public class ChooseGameTypeFragment extends Fragment {
             gameActivity.setGameState(GameState.GAME_TYPE_CHOSEN);
             gameActivity.setCommunication(createCommunication(optionView.getGameTypeOption()));
             getFragmentManager().beginTransaction().remove(this).commit();
-            gameActivity.controller();
+            gameActivity.doThings();
 
         }));
         playWithComputerEw.setContent(optionView);

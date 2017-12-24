@@ -14,12 +14,15 @@ import com.example.michal.battleship.connection.IConnectionService;
 import com.example.michal.battleship.connection.communication.ICommunication;
 import com.example.michal.battleship.model.Player;
 import com.example.michal.battleship.model.User;
+import com.example.michal.battleship.utils.SnackbarFactory;
 import com.example.michal.battleship.views.MainActivity;
 import com.example.michal.battleship.views.gameView.chooseGameType.ChooseGameTypeFragment;
 import com.example.michal.battleship.views.gameView.chooseGameType.GameTypeOption;
 import com.example.michal.battleship.views.gameView.configureBoard.ConfigureBoardFragment;
 import com.example.michal.battleship.views.gameView.endGame.EndGameFragment;
 import com.example.michal.battleship.views.gameView.game.GameFragment;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by michal on 18.12.17.
@@ -46,7 +49,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         init();
-        controller();
+        doThings();
     }
 
     private void init() {
@@ -80,7 +83,7 @@ public class GameActivity extends AppCompatActivity {
         this.gameState = gameState;
     }
 
-    public void controller() {
+    public void doThings() {
         switch (gameState) {
             case CHOOSE_GAME_TYPE:
                 startChooseGameTypeFragment();
@@ -90,14 +93,14 @@ public class GameActivity extends AppCompatActivity {
                 communication.sendMe(me);
                 opponent = communication.retrieveOpponent();
                 setGameState(GameState.CONFIGURE_BOARD);
-                controller();
+                doThings();
                 break;
             case CONFIGURE_BOARD:
                 startConfigureBoardFragment();
                 break;
             case BOARD_CONFIGURED:
                 setGameState(GameState.START_GAME);
-                controller();
+                doThings();
                 break;
             case START_GAME:
                 startGameFragment();
@@ -106,8 +109,17 @@ public class GameActivity extends AppCompatActivity {
                 startEndGameFragment();
                 break;
             case REVENGE:
-                setGameState(GameState.CONFIGURE_BOARD);
-                controller();
+                if(getCommunication().retrieveRevenge()) {
+                    setGameState(GameState.CONFIGURE_BOARD);
+                } else {
+                    SnackbarFactory.getInfo(gameActivityLL, getResources().getString(R.string.opponentLeftGame));
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                doThings();
                 break;
             case EXIT:
 //                TODO pewnie potrzebne sprzątanie
