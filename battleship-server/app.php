@@ -1,9 +1,22 @@
 <?php
+use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ResponseInterface as Response;
+
+    require 'vendor/autoload.php';
     require_once("Register.class.php");
     require_once("Login.class.php");
     require_once("ResetPassword.class.php");
     require_once("User.class.php");
     require_once("Connection.class.php");
+    //
+    // $app = new \Slim\App;
+    // $app->get('/hello/{name}', function (Request $request, Response $response) {
+    //     $name = $request->getAttribute('name');
+    //     $response->getBody()->write("Hello, $name");
+    //
+    //     return $response;
+    // });
+    // $app->run();
 
     $connection = new Connection();
 

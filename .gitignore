@@ -113,3 +113,5 @@ fabric.properties
 /specyfikacja.odt
 
 battleship-server/config\.php
+
+battleship-server/vendor/
