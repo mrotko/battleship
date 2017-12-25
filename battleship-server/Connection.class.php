@@ -1,12 +1,20 @@
 <?php
-    include_once("config.php");
+    require_once("config.php");
 
     class Connection {
-        private static $host = $CONFIG['host'];
-        private static $dbname = $CONFIG['dbname'];
-        private static $username = $CONFIG['username'];
-        private static $password = $CONFIG['password'];
+        private static $host;
+        private static $dbname;
+        private static $username;
+        private static $password;
         private static $connection;
+
+        public function __construct()
+        {
+            self::$host = $CONFIG['host'];
+            self::$dbname = $CONFIG['dbname'];
+            self::$username = $CONFIG['username'];
+            self::$password = $CONFIG['password'];
+        }
 
         public function getConnection() {
             if(is_null(self::$connection)) {
