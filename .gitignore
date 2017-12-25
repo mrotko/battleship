@@ -111,3 +111,7 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 /specyfikacja.odt
+
+battleship-server/config\.php
+
+battleship-server/vendor/
