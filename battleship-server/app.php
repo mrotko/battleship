@@ -1,41 +1,41 @@
 <?php
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-
-    require 'vendor/autoload.php';
     require_once("Register.class.php");
     require_once("Login.class.php");
     require_once("ResetPassword.class.php");
     require_once("User.class.php");
     require_once("Connection.class.php");
-    //
-    // $app = new \Slim\App;
-    // $app->get('/hello/{name}', function (Request $request, Response $response) {
-    //     $name = $request->getAttribute('name');
-    //     $response->getBody()->write("Hello, $name");
-    //
-    //     return $response;
-    // });
-    // $app->run();
 
     $connection = new Connection();
 
-    $response = array("error" => false);
-    if($_POST['request']) {
-        $request = json_decode($_POST['request']);
+    $response = array("status" => 2);
 
-
-        var_dump($request);
-
-        switch($request['type']) {
-            case 'LOGIN':
+    if(isset($_POST['type'])) {
+        switch($_POST['type']) {
+            case 'login':
                 $login = new Login($connection);
+                $user = $login->tryLoginByEmail($_POST['email'], $_POST['hashPass']);
+                if($user != NULL) {
+                    $response['status'] = 0;
+                    $response['userData'] = $user->getArray();
+                } else {
+                    $response['status'] = 1;
+                }
                 break;
-            case 'REGISTER':
+            case 'register':
                 $register = new Register($connection);
-                $user = new User($request['user']);
+                $user = new User(array( 'email' => $_POST['email'],
+                                        'customName' => $_POST['customName'],
+                                        'googleId' => $_POST['googleId'],
+                                        'hashPass' => $_POST['hashPass'],
+                                        'points' => $_POST['points'],
+                                        'level' => $_POST['level']
+                                    ));
                 $result = $register->register($user);
-                $response['error'] = !$result;
+                if($result) {
+                    $response['status'] = 0;
+                } else {
+                    $response['status'] = 1;
+                }
                 break;
             case 'RESET_PASSWORD':
                 break;

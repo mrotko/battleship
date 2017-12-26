@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private void createExitButton() {
         exitBtn = findViewById(R.id.btnMenuExit);
         exitBtn.setOnClickListener(view -> {
+            session.logoutUser();
             Intent homeIntent = new Intent(Intent.ACTION_MAIN);
             homeIntent.addCategory(Intent.CATEGORY_HOME);
             homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
