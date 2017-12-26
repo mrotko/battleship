@@ -2,6 +2,7 @@ package com.example.michal.battleship.views.authView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,7 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.example.michal.battleship.AppConfig;
 import com.example.michal.battleship.AppController;
@@ -29,57 +30,53 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.net.ssl.SSLContext;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText customNameEt;
+    @BindView(R.id.cl_register_activity) ConstraintLayout registerActivityCl;
 
-    private EditText emailEt;
+    @BindView(R.id.etCustomName) EditText customNameEt;
 
-    private EditText passwordEt;
+    @BindView(R.id.etEmail) EditText emailEt;
 
-    private EditText repeatPasswordEt;
+    @BindView(R.id.etPassword) EditText passwordEt;
 
-    private Button createAccountBtn;
+    @BindView(R.id.etRepeatPassword) EditText repeatPasswordEt;
 
-    private Button registerByGoogleBtn;
+    @BindView(R.id.btnCreateAccount) Button createAccountBtn;
 
-    private Button switchToLoginBtn;
+    @BindView(R.id.btnCreateAccountByGoogle) Button registerByGoogleBtn;
 
-    private ProgressBar progressBar;
+    @BindView(R.id.btnSwitchToLogin) Button switchToLoginBtn;
 
-    private ConstraintLayout registerActivityCl;
+    @BindView(R.id.progressBar) ProgressBar progressBar;
 
-    private IHashProvider hashProvder;
+    private IHashProvider hashProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        ButterKnife.bind(this);
 
-        createRegisterActivityCl();
-        createProgressBar();
-        createCustomNameEt();
-        createEmailEt();
-        createPasswordEt();
-        createRepeatPasswordEt();
-        createAccountBtn();
-        createRegisterByGoogleBtn();
-        createSwitchToLoginBtn();
-        createHashProvider();
+        configureProgressBar();
+        configureCustomNameEt();
+        configureEmailEt();
+        configurePasswordEt();
+        configureRepeatPasswordEt();
+        configureAccountBtn();
+        configureRegisterByGoogleBtn();
+        configureSwitchToLoginBtn();
+        configureHashProvider();
     }
 
-    private void createHashProvider() {
-        hashProvder = new SHA512HashProvider();
+    private void configureHashProvider() {
+        hashProvider = new SHA512HashProvider();
     }
 
-    private void createRegisterActivityCl() {
-        registerActivityCl = findViewById(R.id.cl_register_activity);
-    }
-
-    private void createProgressBar() {
-        progressBar = findViewById(R.id.progressBar);
+    private void configureProgressBar() {
         hideProgressBar();
     }
 
@@ -91,75 +88,90 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void createCustomNameEt() {
-        customNameEt = findViewById(R.id.etCustomName);
+    private void configureCustomNameEt() {
         customNameEt.setOnFocusChangeListener((view, isFocus) -> {
             if(!isFocus) {
-                if(customNameEt.getText().toString().isEmpty()) {
-                    customNameEt.setError(getResources().getString(R.string.error_empty));
-                } else {
-                    customNameEt.setError(null);
-                }
+                validateCustomNameEt();
             }
         });
     }
 
-    private void createEmailEt() {
-        emailEt = findViewById(R.id.etEmail);
+    private boolean validateCustomNameEt() {
+        if(customNameEt.getText().toString().isEmpty()) {
+            customNameEt.setError(getResources().getString(R.string.error_empty));
+            return false;
+        } else {
+            customNameEt.setError(null);
+            return true;
+        }
+    }
+
+    private void configureEmailEt() {
         emailEt.setOnFocusChangeListener((view, isFocus) -> {
             if(!isFocus) {
-                if(!Patterns.EMAIL.matcher(emailEt.getText().toString()).matches()) {
-                    emailEt.setError(getResources().getString(R.string.error_email));
-                } else {
-                    emailEt.setError(null);
-                }
+                validateEmailEt();
             }
         });
     }
 
-    private void createPasswordEt() {
-        passwordEt = findViewById(R.id.etPassword);
+    private boolean validateEmailEt() {
+        if(!Patterns.EMAIL.matcher(emailEt.getText().toString()).matches()) {
+            emailEt.setError(getResources().getString(R.string.error_email));
+            return false;
+        } else {
+            emailEt.setError(null);
+            return true;
+        }
+    }
+
+    private void configurePasswordEt() {
         passwordEt.setOnFocusChangeListener((view, isFocus) -> {
             if(!isFocus) {
-                if(!Patterns.PASSWORD.matcher(passwordEt.getText().toString()).matches()) {
-                    passwordEt.setError(getResources().getString(R.string.error_password));
-                } else {
-                    passwordEt.setError(null);
-                }
+                validatePasswordEt();
             }
         });
     }
 
-    private void createRepeatPasswordEt() {
-        repeatPasswordEt = findViewById(R.id.etRepeatPassword);
+    private boolean validatePasswordEt() {
+        if(!Patterns.PASSWORD.matcher(passwordEt.getText().toString()).matches()) {
+            passwordEt.setError(getResources().getString(R.string.error_password));
+            return false;
+        } else {
+            passwordEt.setError(null);
+            return true;
+        }
+    }
+
+    private void configureRepeatPasswordEt() {
         repeatPasswordEt.setOnFocusChangeListener((view, isFocus) -> {
             if(!isFocus) {
-                if(!repeatPasswordEt.getText().toString().equals(passwordEt.getText().toString())) {
-                    repeatPasswordEt.setError(getResources().getString(R.string.error_repeat_password));
-                } else {
-                    repeatPasswordEt.setError(null);
-                }
+                validateRepeatPasswordEt();
             }
         });
     }
 
-    private void createAccountBtn() {
-        createAccountBtn = findViewById(R.id.btnCreateAccount);
+    private boolean validateRepeatPasswordEt() {
+        if(!repeatPasswordEt.getText().toString().equals(passwordEt.getText().toString())) {
+            repeatPasswordEt.setError(getResources().getString(R.string.error_repeat_password));
+            return false;
+        } else {
+            repeatPasswordEt.setError(null);
+            return true;
+        }
+    }
+
+    private void configureAccountBtn() {
         createAccountBtn.setOnClickListener(view -> {
             hideKeyboard();
-            if(     customNameEt.getError() == null &&
-                    emailEt.getError() == null &&
-                    passwordEt.getError() == null &&
-                    repeatPasswordEt.getError() == null &&
-                    !customNameEt.getText().toString().isEmpty() &&
-                    !emailEt.getText().toString().isEmpty() &&
-                    !passwordEt.getText().toString().isEmpty() &&
-                    !repeatPasswordEt.getText().toString().isEmpty()) {
+            if(     validateCustomNameEt() &&
+                    validateEmailEt() &&
+                    validatePasswordEt() &&
+                    validateRepeatPasswordEt()) {
                 User user = new User();
                 user.setEmail(emailEt.getText().toString());
                 user.setCustomName(customNameEt.getText().toString());
                 user.setGoogleId("");
-                user.setHashPass(hashProvder.getHashed(passwordEt.getText().toString()));
+                user.setHashPass(hashProvider.getHashed(passwordEt.getText().toString()));
                 checkRegister(user);
             } else {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.emptyCredentials), Toast.LENGTH_LONG)
@@ -182,28 +194,8 @@ public class RegisterActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
                 AppConfig.URL_DATABASE,
-                response -> {
-                    System.out.println(response);
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response);
-                        switch(jsonResponse.getInt("status")) {
-                            case 0:
-                                openLoginActivity();
-                                break;
-                            case 1:
-                                showToast(R.string.error_email_exists);
-                                break;
-                            default:
-                                showToast(R.string.error_unknown);
-                        }
-                        hideProgressBar();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> {
-            Log.e(tag_register_request, "Register Error: " + error.getMessage());
-            showToast(error.getMessage());
-        }) {
+                createStringResponseListener(),
+                createErrorListener(tag_register_request)) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -221,6 +213,37 @@ public class RegisterActivity extends AppCompatActivity {
         AppController.getInstance().addRequestToQueue(stringRequest, tag_register_request);
     }
 
+    @NonNull
+    private Response.ErrorListener createErrorListener(String tag_register_request) {
+        return error -> {
+                    Log.e(tag_register_request, "Register Error: " + error.getMessage());
+                    showToast(error.getMessage());
+                };
+    }
+
+    @NonNull
+    private Response.Listener<String> createStringResponseListener() {
+        return response -> {
+            System.out.println(response);
+            try {
+                JSONObject jsonResponse = new JSONObject(response);
+                switch(jsonResponse.getInt("status")) {
+                    case 0:
+                        openLoginActivity();
+                        break;
+                    case 1:
+                        showToast(R.string.error_email_exists);
+                        break;
+                    default:
+                        showToast(R.string.error_unknown);
+                }
+                hideProgressBar();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        };
+    }
+
     private void showToast(int resource_string_id) {
         showToast(getResources().getString(resource_string_id));
     }
@@ -235,16 +258,14 @@ public class RegisterActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void createRegisterByGoogleBtn() {
-        registerByGoogleBtn = findViewById(R.id.btnCreateAccountByGoogle);
+    private void configureRegisterByGoogleBtn() {
         registerByGoogleBtn.setOnClickListener(view -> {
 
         });
 
     }
 
-    private void createSwitchToLoginBtn() {
-        switchToLoginBtn = findViewById(R.id.btnSwitchToLogin);
+    private void configureSwitchToLoginBtn() {
         switchToLoginBtn.setOnClickListener(view -> finish());
     }
 }

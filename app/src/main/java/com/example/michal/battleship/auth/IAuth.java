@@ -9,5 +9,5 @@ import javax.security.auth.login.LoginException;
  */
 
 public interface IAuth {
-    User tryLogin(String email, String password) throws LoginException;
+    User tryLogin(String email, String password);
 }

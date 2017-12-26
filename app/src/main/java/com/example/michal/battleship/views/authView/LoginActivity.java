@@ -2,6 +2,7 @@ package com.example.michal.battleship.views.authView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,8 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.example.michal.battleship.AppConfig;
 import com.example.michal.battleship.AppController;
@@ -32,48 +32,47 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class LoginActivity extends AppCompatActivity {
 
-    private Button loginBtn;
+    @BindView(R.id.cl_login_activity) ConstraintLayout loginActivityCl;
 
-    private Button googleLoginBtn;
+    @BindView(R.id.btnLogin) Button loginBtn;
 
-    private Button switchToRegisterBtn;
+    @BindView(R.id.btnGoogleLogin) Button googleLoginBtn;
 
-    private EditText emailEt;
+    @BindView(R.id.btnSwitchToRegister) Button switchToRegisterBtn;
 
-    private EditText passwordEt;
+    @BindView(R.id.etEmail) EditText emailEt;
+
+    @BindView(R.id.etPassword) EditText passwordEt;
+
+    @BindView(R.id.progressBar) ProgressBar progressBar;
 
     private SessionService sessionService;
 
-    private ProgressBar progressBar;
-
     private IHashProvider hashProvider;
-
-    private ConstraintLayout loginActivityCl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
 
-        createLoginActivityView();
-        createProgressBar();
-        createEmailEt();
-        createPasswordEt();
-        createLoginBtn();
-        createGoogleLoginBtn();
-        createSwitchToRegisterBtn();
-        createSessionService();
-        createHashProvider();
+        configureProgressBar();
+        configureEmailEt();
+        configurePasswordEt();
+        configureLoginBtn();
+        configureGoogleLoginBtn();
+        configureSwitchToRegisterBtn();
+        configureSessionService();
+        configureHashProvider();
     }
 
-    private void createLoginActivityView() {
-        loginActivityCl = findViewById(R.id.cl_login_activity);
-    }
 
-    private void createProgressBar() {
-        progressBar = findViewById(R.id.progressBar);
+    private void configureProgressBar() {
         hideProgressBar();
     }
 
@@ -81,40 +80,46 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
     }
 
-    private void createEmailEt() {
-        emailEt = findViewById(R.id.etEmail);
+    private void configureEmailEt() {
         emailEt.setOnFocusChangeListener((view, isFocus) -> {
             if(!isFocus) {
-                if(!Patterns.EMAIL.matcher(emailEt.getText().toString()).matches()) {
-                    emailEt.setError(getResources().getString(R.string.error_email));
-                } else {
-                    emailEt.setError(null);
-                }
+                validateEmailEt();
             }
         });
     }
 
-    private void createPasswordEt() {
-        passwordEt = findViewById(R.id.etPassword);
+    private boolean validateEmailEt() {
+        if(!Patterns.EMAIL.matcher(emailEt.getText().toString()).matches()) {
+            emailEt.setError(getResources().getString(R.string.error_email));
+            return false;
+        } else {
+            emailEt.setError(null);
+            return true;
+        }
+    }
+
+    private void configurePasswordEt() {
         passwordEt.setOnFocusChangeListener((view, isFocus) -> {
             if(!isFocus) {
-                if(!Patterns.PASSWORD.matcher(passwordEt.getText().toString()).matches()) {
-                    passwordEt.setError(getResources().getString(R.string.error_password));
-                } else {
-                    passwordEt.setError(null);
-                }
+                validatePasswordEt();
             }
         });
     }
 
-    private void createLoginBtn() {
-        loginBtn = findViewById(R.id.loginBtn);
+    private boolean validatePasswordEt() {
+        if(!Patterns.PASSWORD.matcher(passwordEt.getText().toString()).matches()) {
+            passwordEt.setError(getResources().getString(R.string.error_password));
+            return false;
+        } else {
+            passwordEt.setError(null);
+            return true;
+        }
+    }
+
+    private void configureLoginBtn() {
         loginBtn.setOnClickListener(view -> {
             hideKeyboard();
-            if(     emailEt.getError() == null &&
-                    passwordEt.getError() == null &&
-                    !emailEt.getText().toString().isEmpty() &&
-                    !passwordEt.getText().toString().isEmpty()) {
+            if(validateEmailEt() && validatePasswordEt()) {
                 String email = emailEt.getText().toString().trim();
                 String password = passwordEt.getText().toString().trim();
                 checkLogin(email, password);
@@ -138,30 +143,8 @@ public class LoginActivity extends AppCompatActivity {
 
         StringRequest request = new StringRequest(Request.Method.POST,
                 AppConfig.URL_DATABASE,
-                response -> {
-            System.out.println(response);
-                    hideProgressBar();
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response);
-                        switch (jsonResponse.getInt("status")) {
-                            case 0:
-                                addUserToSession(jsonResponse.getJSONObject("userData"));
-                                break;
-                            case 1:
-                                showToast(R.string.error_login);
-                                break;
-                            default:
-                                showToast(R.string.error_unknown);
-                                break;
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> {
-            Log.e(tag_login_request, "Login Error: " + error.getMessage());
-            showToast(error.getMessage());
-        }) {
+                createResponseStringListener(),
+                createErrorListener(tag_login_request)) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -174,7 +157,39 @@ public class LoginActivity extends AppCompatActivity {
         AppController.getInstance().addRequestToQueue(request, tag_login_request);
     }
 
-    private void addUserToSession(JSONObject userData) throws JSONException {
+    @NonNull
+    private Response.ErrorListener createErrorListener(String tag_login_request) {
+        return error -> {
+                    Log.e(tag_login_request, "Login Error: " + error.getMessage());
+                    showToast(error.getMessage());
+                };
+    }
+
+    @NonNull
+    private Response.Listener<String> createResponseStringListener() {
+        return response -> {
+            hideProgressBar();
+            try {
+                JSONObject jsonResponse = new JSONObject(response);
+                switch (jsonResponse.getInt("status")) {
+                    case 0:
+                        startSession(jsonResponse.getJSONObject("userData"));
+                        break;
+                    case 1:
+                        showToast(R.string.error_login);
+                        break;
+                    default:
+                        showToast(R.string.error_unknown);
+                        break;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        };
+    }
+
+    private void startSession(JSONObject userData) throws JSONException {
         User user = new User();
         user.setId(userData.getInt("id"));
         user.setEmail(userData.getString("email"));
@@ -194,14 +209,14 @@ public class LoginActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void createSessionService() {
+    private void configureSessionService() {
         sessionService = new SessionService();
         if(sessionService.getSessionManager(this).isLogged()) {
             openMainActivity();
         }
     }
 
-    private void createHashProvider() {
+    private void configureHashProvider() {
         hashProvider = new SHA512HashProvider();
     }
 
@@ -209,16 +224,13 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void createGoogleLoginBtn() {
-        googleLoginBtn = findViewById(R.id.btnGoogleLogin);
-        googleLoginBtn.setVisibility(View.INVISIBLE);
+    private void configureGoogleLoginBtn() {
         googleLoginBtn.setOnClickListener(view -> {
 
         });
     }
 
-    private void createSwitchToRegisterBtn() {
-        switchToRegisterBtn = findViewById(R.id.btnSwitchToRegister);
+    private void configureSwitchToRegisterBtn() {
         switchToRegisterBtn.setOnClickListener(view -> {
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
