@@ -1,5 +1,5 @@
 <?php
-    require_once("config.php");
+    require_once 'config.php';
 
     class Connection {
         private static $host;
@@ -8,8 +8,8 @@
         private static $password;
         private static $connection;
 
-        public function __construct()
-        {
+        public function __construct() {
+            global $CONFIG;
             self::$host = $CONFIG['host'];
             self::$dbname = $CONFIG['dbname'];
             self::$username = $CONFIG['username'];
@@ -21,9 +21,7 @@
                 try {
                     self::$connection = new PDO("mysql:host=".self::$host.";dbname=".self::$dbname, self::$username, self::$password);
                     self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    echo "Success";
                 } catch(PDOException $e) {
-                    echo $e;
                     die("Database connection error");
                 }
             }

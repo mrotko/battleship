@@ -1,5 +1,6 @@
 <?php
     class Login {
+
         private $connection;
 
         public function __construct(Connection $connection) {
@@ -7,12 +8,27 @@
         }
 
         public function tryLoginByEmail($email, $hashPass) {
-            $select_query = "SELECT email, password FROM user WHERE email=\"".$email
-            ."\" AND password=".$hashPass;
+            $sql = "SELECT * FROM user WHERE email=?";
+            $query = $this->connection->getConnection()->prepare($sql);
+            $query->execute(array($email));
+            $user = $query->fetch(PDO::FETCH_ASSOC);
 
-            $res = $connection->getConnection().query($select_query);
-
-            return $res->rowCount() == 1;
+            if($user != null) {
+                if($user['hashPass'] == $hashPass) {
+                    return new User(
+                        array(
+                            'id' => $user['id'],
+                            'email' => $user['email'],
+                            'hashPass' => $user['hashPass'],
+                            'customName' => $user['customName'],
+                            'googleId' => $user['googleId'],
+                            'points' => $user['points'],
+                            'level' => $user['level']
+                        ));
+                } else {
+                    return NULL;
+                }
+            }
         }
     }
 ?>

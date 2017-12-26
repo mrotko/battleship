@@ -9,12 +9,11 @@
         }
 
         public function register(User $user) {
-
-            if(!checkIfUserExists($user->getEmail())) {
-                $insert_sql = "INSERT INTO user (email, password, customName, googleId, points, level)
+            if(!$this->checkIfUserExists($user->getEmail())) {
+                $sql = "INSERT INTO user (email, hashPass, customName, googleId, points, level)
                                     VALUES (?, ?, ?, ?, ?, ?)";
 
-                $connection->getConnection()->prepare($insert_sql)->execute(
+                $this->connection->getConnection()->prepare($sql)->execute(
                     array(  $user->getEmail(),
                             $user->getHashPass(),
                             $user->getCustomName(),
@@ -22,15 +21,17 @@
                             $user->getPoints(),
                             $user->getLevel())
                 );
+
+                return $this->checkIfUserExists($user->getEmail());
             } else {
                 return false;
             }
         }
 
         private function checkIfUserExists($email) {
-            $query_select_email = "SELECT email FROM user WHERE email=".$email;
-            $select_email_response = $connection->getConnection().query($query_select_email);
-            return $select_email_response->rowCount() == 0;
+            $sql = "SELECT email FROM user WHERE email=\"".$email."\"";
+            $select_email_response = $this->connection->getConnection()->query($sql);
+            return $select_email_response->rowCount() != 0;
         }
     }
 ?>

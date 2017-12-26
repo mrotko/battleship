@@ -5,4 +5,5 @@ package com.example.michal.battleship.auth.hash;
  */
 
 public interface IHashProvider {
+    String getHashed(String text);
 }

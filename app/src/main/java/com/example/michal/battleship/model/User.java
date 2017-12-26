@@ -1,5 +1,7 @@
 package com.example.michal.battleship.model;
 
+import com.android.volley.toolbox.StringRequest;
+
 /**
  * Created by michal on 12.12.17.
  */
@@ -12,9 +14,13 @@ public class User {
 
     private String customName;
 
-    private Integer points;
+    private Integer points = 0;
 
-    private Integer level;
+    private Integer level = 0;
+
+    private String hashPass;
+
+    private String googleId = "";
 
     public int getId() {
         return id;
@@ -54,5 +60,21 @@ public class User {
 
     public void setLevel(Integer level) {
         this.level = level;
+    }
+
+    public void setHashPass(String hashPass) {
+        this.hashPass = hashPass;
+    }
+
+    public String getHashPass() {
+        return hashPass;
+    }
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
+    }
+
+    public String getGoogleId() {
+        return googleId;
     }
 }
