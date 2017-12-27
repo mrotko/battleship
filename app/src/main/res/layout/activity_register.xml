@@ -9,9 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="56dp"
+        android:paddingTop="30dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
+
+        <include
+            layout="@layout/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:padding="12dp" />
 
         <EditText
             android:id="@+id/etCustomName"
@@ -73,13 +80,6 @@
             android:layout_marginTop="10dp"
             android:padding="12dp"
             android:text="@string/login" />
-
-        <include
-            layout="@layout/progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginTop="10dp"
-            android:padding="12dp"/>
 
     </LinearLayout>
 </ScrollView>

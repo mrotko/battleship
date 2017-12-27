@@ -9,27 +9,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="56dp"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+        android:paddingRight="24dp"
+        android:paddingTop="30dp">
+
+        <include
+            layout="@layout/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:padding="12dp" />
 
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
+            android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
+            android:hint="@string/email"
+            android:inputType="textEmailAddress" />
 
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hashPass"
-            android:inputType="textPassword"
+            android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
+            android:hint="@string/hashPass"
+            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/btnLogin"
@@ -55,11 +62,5 @@
             android:padding="12dp"
             android:text="@string/register" />
 
-        <include
-            layout="@layout/progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginTop="10dp"
-            android:padding="12dp"/>
     </LinearLayout>
 </ScrollView>
