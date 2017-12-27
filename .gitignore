@@ -115,3 +115,7 @@ fabric.properties
 battleship-server/config\.php
 
 battleship-server/vendor/
+
+battleship-server/\.ftpconfig
+
+battleship-server/\.ftpignore
