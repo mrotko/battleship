@@ -80,7 +80,7 @@
     <string name="email">Email</string>
     <string name="hashPass">Password</string>
     <string name="loginError">Wrong email or hashPass</string>
-    <string name="repeatPassword">Repeat hashPass</string>
+    <string name="repeatPassword">Repeat password</string>
     <string name="customName">Custom name</string>
     <string name="createAccount">Create account</string>
     <string name="createAccountByGoogle">Create account by google</string>

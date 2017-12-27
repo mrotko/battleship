@@ -3,7 +3,6 @@ package com.example.michal.battleship.views.authView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -35,23 +35,32 @@ import butterknife.ButterKnife;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    @BindView(R.id.cl_register_activity) ConstraintLayout registerActivityCl;
+    @BindView(R.id.sv_register_activity)
+    ScrollView registerActivitySv;
 
-    @BindView(R.id.etCustomName) EditText customNameEt;
+    @BindView(R.id.etCustomName)
+    EditText customNameEt;
 
-    @BindView(R.id.etEmail) EditText emailEt;
+    @BindView(R.id.etEmail)
+    EditText emailEt;
 
-    @BindView(R.id.etPassword) EditText passwordEt;
+    @BindView(R.id.etPassword)
+    EditText passwordEt;
 
-    @BindView(R.id.etRepeatPassword) EditText repeatPasswordEt;
+    @BindView(R.id.etRepeatPassword)
+    EditText repeatPasswordEt;
 
-    @BindView(R.id.btnCreateAccount) Button createAccountBtn;
+    @BindView(R.id.btnCreateAccount)
+    Button createAccountBtn;
 
-    @BindView(R.id.btnCreateAccountByGoogle) Button registerByGoogleBtn;
+    @BindView(R.id.btnCreateAccountByGoogle)
+    Button registerByGoogleBtn;
 
-    @BindView(R.id.btnSwitchToLogin) Button switchToLoginBtn;
+    @BindView(R.id.btnSwitchToLogin)
+    Button switchToLoginBtn;
 
-    @BindView(R.id.progressBar) ProgressBar progressBar;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
 
     private IHashProvider hashProvider;
 
@@ -183,7 +192,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         if (inputMethodManager != null) {
-            inputMethodManager.hideSoftInputFromWindow(registerActivityCl.getWindowToken(), 0);
+            inputMethodManager.hideSoftInputFromWindow(registerActivitySv.getWindowToken(), 0);
         }
     }
 

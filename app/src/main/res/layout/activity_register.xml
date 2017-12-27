@@ -1,106 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cl_register_activity"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sv_register_activity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        android:paddingTop="56dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
 
         <EditText
             android:id="@+id/etCustomName"
-            style="@style/Widget.AppCompat.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="@string/customName"
             android:inputType="textPersonName"
             android:singleLine="true"
-            android:textSize="30sp" />
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
 
         <EditText
             android:id="@+id/etEmail"
-            style="@style/Widget.AppCompat.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
-            android:textSize="30sp" />
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
 
         <EditText
             android:id="@+id/etPassword"
-            style="@style/Widget.AppCompat.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="@string/hashPass"
             android:inputType="textPassword"
-            android:textSize="30sp" />
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
 
         <EditText
             android:id="@+id/etRepeatPassword"
-            style="@style/Widget.AppCompat.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="@string/repeatPassword"
             android:inputType="textPassword"
-            android:textSize="30sp" />
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
 
-        <LinearLayout
+        <Button
+            android:id="@+id/btnCreateAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="10dp"
+            android:padding="12dp"
+            android:text="@string/createAccount" />
 
-            <Button
-                android:id="@+id/btnCreateAccount"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/createAccount" />
+        <Button
+            android:id="@+id/btnCreateAccountByGoogle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:padding="12dp"
+            android:text="@string/createAccountByGoogle" />
 
-            <Button
-                android:id="@+id/btnCreateAccountByGoogle"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/createAccountByGoogle" />
+        <Button
+            android:id="@+id/btnSwitchToLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:padding="12dp"
+            android:text="@string/login" />
 
-            <Button
-                android:id="@+id/btnSwitchToLogin"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/login" />
-
-        </LinearLayout>
+        <include
+            layout="@layout/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:padding="12dp"/>
 
     </LinearLayout>
-
-    <include
-        layout="@layout/progress_bar"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-</android.support.constraint.ConstraintLayout>
+</ScrollView>

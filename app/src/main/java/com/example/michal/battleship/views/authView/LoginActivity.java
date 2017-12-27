@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -37,19 +38,26 @@ import butterknife.ButterKnife;
 
 public class LoginActivity extends AppCompatActivity {
 
-    @BindView(R.id.cl_login_activity) ConstraintLayout loginActivityCl;
+    @BindView(R.id.sv_login_activity)
+    ScrollView loginActivitySv;
 
-    @BindView(R.id.btnLogin) Button loginBtn;
+    @BindView(R.id.btnLogin)
+    Button loginBtn;
 
-    @BindView(R.id.btnGoogleLogin) Button googleLoginBtn;
+    @BindView(R.id.btnGoogleLogin)
+    Button googleLoginBtn;
 
-    @BindView(R.id.btnSwitchToRegister) Button switchToRegisterBtn;
+    @BindView(R.id.btnSwitchToRegister)
+    Button switchToRegisterBtn;
 
-    @BindView(R.id.etEmail) EditText emailEt;
+    @BindView(R.id.etEmail)
+    EditText emailEt;
 
-    @BindView(R.id.etPassword) EditText passwordEt;
+    @BindView(R.id.etPassword)
+    EditText passwordEt;
 
-    @BindView(R.id.progressBar) ProgressBar progressBar;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
 
     private SessionService sessionService;
 
@@ -132,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
     private void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         if (inputMethodManager != null) {
-            inputMethodManager.hideSoftInputFromWindow(loginActivityCl.getWindowToken(), 0);
+            inputMethodManager.hideSoftInputFromWindow(loginActivitySv.getWindowToken(), 0);
         }
     }
 
