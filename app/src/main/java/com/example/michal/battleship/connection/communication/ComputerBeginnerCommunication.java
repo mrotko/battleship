@@ -1,7 +1,6 @@
 package com.example.michal.battleship.connection.communication;
 
 import com.example.michal.battleship.model.MoveDTO;
-import com.example.michal.battleship.views.gameView.board.ship.Ship;
 
 import java.util.concurrent.TimeUnit;
 

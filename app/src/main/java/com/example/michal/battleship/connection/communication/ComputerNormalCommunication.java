@@ -1,14 +1,9 @@
 package com.example.michal.battleship.connection.communication;
 
 import com.example.michal.battleship.model.MoveDTO;
-import com.example.michal.battleship.model.SimpleObject;
-import com.example.michal.battleship.views.gameView.board.BoardField;
-import com.example.michal.battleship.views.gameView.board.fieldType.FieldStatus;
 import com.example.michal.battleship.views.gameView.board.fieldType.ShipFieldType;
-import com.example.michal.battleship.views.gameView.board.ship.Ship;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
@@ -24,7 +19,7 @@ public class ComputerNormalCommunication extends ComputerCommunication {
 
     private Predicate<Integer> horizontalRange = (value) -> true;
 
-    private Predicate<Integer> vertivalRange = (value) -> true;
+    private Predicate<Integer> verticalRange = (value) -> true;
 
     private List<MoveDTO> moves = new ArrayList<>();
 
@@ -32,12 +27,8 @@ public class ComputerNormalCommunication extends ComputerCommunication {
 
     private boolean onFire = false;
 
-
-
     @Override
     protected MoveDTO calculateMove() {
-        removeFieldsAroundSunkedShip();
-
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
@@ -48,7 +39,8 @@ public class ComputerNormalCommunication extends ComputerCommunication {
             onFire = true;
         }
 
-        if(lastAvailableShipsSize > getAvailableShipsSize()) {
+        if(lastAvailableShipsSize > countAvailableShips()) {
+            removeFieldsAroundSunkedShip();
             moves.clear();
             onFire = false;
         } else if(onFire && !moves.isEmpty() && !checkHit(moves.get(moves.size() - 1))) {
@@ -64,18 +56,20 @@ public class ComputerNormalCommunication extends ComputerCommunication {
         MoveDTO move = new MoveDTO(rowId, fieldId);
         moves.add(move);
 
-        lastAvailableShipsSize = getAvailableShipsSize();
+        lastAvailableShipsSize = countAvailableShips();
 
         return move;
     }
 
     private Integer drawMove() {
-        predictFields();
-        predictedFields = availableFields.stream()
-                .filter(fieldId -> horizontalRange.test(fieldId) || vertivalRange.test(fieldId))
-                .collect(Collectors.toList());
+        if(onFire) {
+            predictFields();
+            predictedFields = availableFields.stream()
+                    .filter(fieldId -> horizontalRange.test(fieldId) || verticalRange.test(fieldId))
+                    .collect(Collectors.toList());
+        }
 
-        if(predictedFields.isEmpty() || !onFire) {
+        if(predictedFields.isEmpty()) {
             predictedFields = availableFields;
         }
 
@@ -83,28 +77,13 @@ public class ComputerNormalCommunication extends ComputerCommunication {
     }
 
     private void predictFields() {
-        List<MoveDTO> lastHittedMoves = new ArrayList<>();
-
-        int index = moves.size() - 1;
-
-        while (index >= 0) {
-            if(checkHit(moves.get(index))) {
-                lastHittedMoves.add(moves.get(index));
-            } else {
-                break;
-            }
-            index--;
-        }
+        List<MoveDTO> lastHittedMoves = moves.stream()
+                .filter(this::checkHit)
+                .collect(Collectors.toList());
 
         if(!lastHittedMoves.isEmpty()) {
-            int shipMaxSize = me.getBoard().getShips().stream()
-                    .filter(ship -> !ship.isSunken())
-                    .mapToInt(Ship::getSize)
-                    .max()
-                    .orElse(0);
-
             if(lastHittedMoves.size() == 1) {
-                vertivalRange = (value) -> {
+                verticalRange = (value) -> {
                     int hittedRowId = lastHittedMoves.get(0).getRowId();
                     int hittedFieldId = lastHittedMoves.get(0).getFieldId();
                     int moveFieldId = value % 10;
@@ -138,7 +117,7 @@ public class ComputerNormalCommunication extends ComputerCommunication {
 
                     horizontalRange = (value) -> false;
 
-                    vertivalRange = (value) -> {
+                    verticalRange = (value) -> {
                         int moveFieldId = value % 10;
                         int moveRowId = value / 10;
                         return (moveFieldId == hittedFieldId) && (moveRowId >= minHittedRowId - 1 && moveRowId <= maxHittedRowId + 1);
@@ -158,7 +137,7 @@ public class ComputerNormalCommunication extends ComputerCommunication {
 
                     int hittedRowId = lastHittedMoves.get(0).getRowId();
 
-                    vertivalRange = (value) -> false;
+                    verticalRange = (value) -> false;
 
                     horizontalRange = (value) -> {
                         int moveFieldId = value % 10;
@@ -169,7 +148,7 @@ public class ComputerNormalCommunication extends ComputerCommunication {
             }
 
         } else {
-            vertivalRange = (value) -> true;
+            verticalRange = (value) -> true;
             horizontalRange = (value) -> true;
         }
     }
@@ -181,7 +160,7 @@ public class ComputerNormalCommunication extends ComputerCommunication {
                 .getFieldType() instanceof ShipFieldType;
     }
 
-    private int getAvailableShipsSize() {
+    private int countAvailableShips() {
         return me.getBoard().getShips().stream()
                 .filter(ship -> !ship.isSunken())
                 .collect(Collectors.toList())
