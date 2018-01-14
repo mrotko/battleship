@@ -203,15 +203,16 @@ public class GameFragment extends Fragment {
             MoveDTO moveDTO = gameFragment.get().gameActivity.getCommunication().retrieveMove();
             rowId = moveDTO.getRowId();
             fieldId = moveDTO.getFieldId();
+
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            gameFragment.get().workingAsyncTasks.remove(this);
             gameFragment.get().myBoardView.getBoard().getRows().get(rowId).getFields().get(fieldId).hit();
             gameFragment.get().myBoardView.redraw();
-            gameFragment.get().workingAsyncTasks.remove(this);
         }
     }
 }
