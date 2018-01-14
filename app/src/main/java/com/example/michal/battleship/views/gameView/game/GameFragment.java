@@ -19,10 +19,12 @@ import com.example.michal.battleship.views.gameView.board.BoardView;
 import com.example.michal.battleship.views.gameView.board.fieldType.FieldStatus;
 import com.example.michal.battleship.views.gameView.board.fieldType.ShipFieldType;
 import com.example.michal.battleship.views.gameView.board.fieldType.WaterFieldType;
+import com.example.michal.battleship.views.gameView.board.ship.Ship;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -42,6 +44,14 @@ public class GameFragment extends Fragment {
     private BoardView myBoardView;
 
     private BoardView opponentBoardView;
+
+    private Statistics opponentStatistics;
+
+    private Statistics myStatistics;
+
+    private PointsCalculator opponentPointsCalculator;
+
+    private PointsCalculator myPointsCalculator;
 
     private List<AsyncTask<Void, Void, Void>> workingAsyncTasks = new ArrayList<>();
 
@@ -67,8 +77,11 @@ public class GameFragment extends Fragment {
     private void init() {
         createOpponentBoard();
         createMyBoard();
-//     TODO   serwer losuje kto pierwszy zaczyna
-        setFirstMove(true);
+        opponentStatistics = new Statistics(gameActivity.getOpponent().getUser().getCustomName());
+        opponentPointsCalculator = new PointsCalculator();
+        myStatistics = new Statistics(gameActivity.getMe().getUser().getCustomName());
+        myPointsCalculator = new PointsCalculator();
+        setFirstMove(new Random(System.currentTimeMillis()).nextBoolean());
     }
 
     private void createMyBoard() {
@@ -84,10 +97,16 @@ public class GameFragment extends Fragment {
         board.setFieldStatusListener(event -> {
             if (event.getNewValue().equals(FieldStatus.HIT)) {
                 if (event.getPropertyName().equals(WaterFieldType.class.getSimpleName())) {
+                    opponentPointsCalculator.hittedWater();
                     prepareForMyMove();
                 } else if (event.getPropertyName().equals(ShipFieldType.class.getSimpleName())) {
+                    opponentPointsCalculator.hittedShip();
+                    opponentPointsCalculator.setSunkedShipCount((int) myBoardView.getBoard().getShips().stream()
+                            .filter(Ship::isSunken)
+                            .count());
                     myShipHit();
                 }
+                opponentStatistics.addPoints(opponentPointsCalculator);
             }
         });
         return new BoardView(getContext(), board);
@@ -139,10 +158,16 @@ public class GameFragment extends Fragment {
             if (event.getNewValue().equals(FieldStatus.HIT)) {
                 if (event.getPropertyName().equals(WaterFieldType.class.getSimpleName())) {
                     prepareForOpponentMove();
+                    myPointsCalculator.hittedWater();
                     new RetrieveMoveAsyncTask(this).execute();
                 } else if (event.getPropertyName().equals(ShipFieldType.class.getSimpleName())) {
+                    myPointsCalculator.hittedShip();
+                    myPointsCalculator.setSunkedShipCount((int) opponentBoardView.getBoard().getShips().stream()
+                            .filter(Ship::isSunken)
+                            .count());
                     opponentShipHit();
                 }
+                myStatistics.addPoints(myPointsCalculator);
             }
         });
         return new BoardView(getContext(), board);
