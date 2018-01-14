@@ -1,13 +1,13 @@
 package com.example.michal.battleship.views.gameView.board;
 
+import android.os.Parcel;
+
 import com.example.michal.battleship.model.SimpleObject;
 import com.example.michal.battleship.views.gameView.board.fieldType.FieldStatus;
-import com.example.michal.battleship.views.gameView.board.fieldType.ShipFieldType;
 import com.example.michal.battleship.views.gameView.board.fieldType.WaterFieldType;
 import com.example.michal.battleship.views.gameView.board.ship.Ship;
 
 import java.beans.PropertyChangeListener;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -17,6 +17,7 @@ import java.util.stream.IntStream;
  */
 
 public class Board extends SimpleObject {
+
     private final int ROW_LENGTH = 10;
 
     private final int COLUMN_LENGTH = 10;
@@ -114,4 +115,55 @@ public class Board extends SimpleObject {
         this.ships = ships;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Board)) return false;
+
+        Board board = (Board) o;
+
+        if (!getShips().equals(board.getShips())) return false;
+        return boardRows.equals(board.boardRows);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = ROW_LENGTH;
+        result = 31 * result + COLUMN_LENGTH;
+        result = 31 * result + FIELD_SIZE;
+        result = 31 * result + getShips().hashCode();
+        result = 31 * result + boardRows.hashCode();
+        return result;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(this.ships);
+        dest.writeTypedList(this.boardRows);
+        dest.writeInt(this.id);
+    }
+
+    protected Board(Parcel in) {
+        this.ships = in.createTypedArrayList(Ship.CREATOR);
+        this.boardRows = in.createTypedArrayList(BoardRow.CREATOR);
+        this.id = in.readInt();
+    }
+
+    public static final Creator<Board> CREATOR = new Creator<Board>() {
+        @Override
+        public Board createFromParcel(Parcel source) {
+            return new Board(source);
+        }
+
+        @Override
+        public Board[] newArray(int size) {
+            return new Board[size];
+        }
+    };
 }

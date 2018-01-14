@@ -11,7 +11,7 @@ public interface ISessionManager {
 
     void checkLogin();
 
-    void getUser();
+    User getUser();
 
     boolean isLogged();
 

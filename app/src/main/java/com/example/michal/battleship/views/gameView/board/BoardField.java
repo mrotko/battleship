@@ -1,10 +1,9 @@
 package com.example.michal.battleship.views.gameView.board;
 
-import com.example.michal.battleship.model.SimpleObject;
-import com.example.michal.battleship.views.gameView.board.fieldType.FieldStatus;
-import com.example.michal.battleship.views.gameView.board.fieldType.FieldType;
+import android.os.Parcel;
 
-import java.beans.PropertyChangeSupport;
+import com.example.michal.battleship.model.SimpleObject;
+import com.example.michal.battleship.views.gameView.board.fieldType.IFieldType;
 
 /**
  * Created by michal on 17.12.17.
@@ -12,7 +11,7 @@ import java.beans.PropertyChangeSupport;
 
 public class BoardField extends SimpleObject {
 
-    private FieldType fieldType;
+    private IFieldType fieldType;
 
     private int rowId;
 
@@ -32,11 +31,11 @@ public class BoardField extends SimpleObject {
 
     public void setActive(boolean active) {this.active = active; }
 
-    public FieldType getFieldType() {
+    public IFieldType getFieldType() {
         return fieldType;
     }
 
-    public void setFieldType(FieldType fieldType) {
+    public void setFieldType(IFieldType fieldType) {
         this.fieldType = fieldType;
     }
 
@@ -50,5 +49,58 @@ public class BoardField extends SimpleObject {
 
     public int getRowId(){
         return this.rowId;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.fieldType, flags);
+        dest.writeInt(this.rowId);
+        dest.writeByte(this.active ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.id);
+    }
+
+    protected BoardField(Parcel in) {
+        this.fieldType = in.readParcelable(IFieldType.class.getClassLoader());
+        this.rowId = in.readInt();
+        this.active = in.readByte() != 0;
+        this.id = in.readInt();
+    }
+
+    public static final Creator<BoardField> CREATOR = new Creator<BoardField>() {
+        @Override
+        public BoardField createFromParcel(Parcel source) {
+            return new BoardField(source);
+        }
+
+        @Override
+        public BoardField[] newArray(int size) {
+            return new BoardField[size];
+        }
+    };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BoardField)) return false;
+
+        BoardField that = (BoardField) o;
+
+        if (rowId != that.rowId) return false;
+        if (active != that.active) return false;
+        return fieldType != null ? fieldType.equals(that.fieldType) : that.fieldType == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = fieldType != null ? fieldType.hashCode() : 0;
+        result = 31 * result + rowId;
+        result = 31 * result + (active ? 1 : 0);
+        return result;
     }
 }

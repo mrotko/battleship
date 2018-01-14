@@ -66,12 +66,13 @@ public class SessionManagerSharedPreferences implements ISessionManager{
     }
 
     @Override
-    public void getUser() {
+    public User getUser() {
         User user = new User();
         user.setEmail(sharedPreferences.getString(KEY_EMAIL, null));
         user.setCustomName(sharedPreferences.getString(KEY_CUSTOM_NAME, ""));
         user.setPoints(sharedPreferences.getInt(KEY_POINTS, -1));
         user.setLevel(sharedPreferences.getInt(KEY_LEVEL, -1));
+        return user;
     }
 
     @Override

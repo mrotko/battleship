@@ -1,12 +1,12 @@
 package com.example.michal.battleship.model;
 
-import java.io.Serializable;
+import android.os.Parcelable;
 
 /**
  * Created by michal on 17.12.17.
  */
 
-public abstract class SimpleObject implements Serializable {
+public abstract class SimpleObject implements Parcelable {
 
     protected int id;
 

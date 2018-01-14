@@ -1,11 +1,10 @@
 package com.example.michal.battleship.views.gameView.board.fieldType;
 
-import android.graphics.drawable.Drawable;
-import android.view.View;
+import android.os.Parcelable;
 
 import java.beans.PropertyChangeListener;
 
-public interface FieldType {
+public interface IFieldType extends Parcelable {
 
     void setFieldStatus(FieldStatus status);
 

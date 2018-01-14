@@ -1,18 +1,18 @@
 package com.example.michal.battleship.model;
 
-import com.android.volley.toolbox.StringRequest;
+import android.os.Parcel;
 
 /**
  * Created by michal on 12.12.17.
  */
 
-public class User {
+public class User extends SimpleObject {
 
     private int id;
 
     private String email;
 
-    private String customName;
+    private String customName = "none";
 
     private Integer points = 0;
 
@@ -77,4 +77,46 @@ public class User {
     public String getGoogleId() {
         return googleId;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.email);
+        dest.writeString(this.customName);
+        dest.writeValue(this.points);
+        dest.writeValue(this.level);
+        dest.writeString(this.hashPass);
+        dest.writeString(this.googleId);
+    }
+
+    public User() {
+    }
+
+    protected User(Parcel in) {
+        this.id = in.readInt();
+        this.email = in.readString();
+        this.customName = in.readString();
+        this.points = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.level = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.hashPass = in.readString();
+        this.googleId = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel source) {
+            return new User(source);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }

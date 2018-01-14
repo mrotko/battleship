@@ -1,14 +1,16 @@
 package com.example.michal.battleship.views.gameView.board.fieldType;
 
+import android.os.Parcel;
+
 import com.example.michal.battleship.R;
 import com.example.michal.battleship.model.SimpleObject;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class WaterFieldType extends SimpleObject implements FieldType {
+public class WaterFieldType extends SimpleObject implements IFieldType {
 
-    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    private transient final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     private FieldStatus fieldStatus = FieldStatus.VISIBLE;
 
@@ -64,4 +66,59 @@ public class WaterFieldType extends SimpleObject implements FieldType {
     public void hit() {
         setFieldStatus(FieldStatus.HIT);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WaterFieldType)) return false;
+
+        WaterFieldType that = (WaterFieldType) o;
+
+        if (hiddenResourceId != that.hiddenResourceId) return false;
+        if (waterResourceId != that.waterResourceId) return false;
+        if (hitResourceId != that.hitResourceId) return false;
+        if (propertyChangeSupport != null ? !propertyChangeSupport.equals(that.propertyChangeSupport) : that.propertyChangeSupport != null)
+            return false;
+        return fieldStatus == that.fieldStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = propertyChangeSupport != null ? propertyChangeSupport.hashCode() : 0;
+        result = 31 * result + (fieldStatus != null ? fieldStatus.hashCode() : 0);
+        result = 31 * result + hiddenResourceId;
+        result = 31 * result + waterResourceId;
+        result = 31 * result + hitResourceId;
+        return result;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.fieldStatus == null ? -1 : this.fieldStatus.ordinal());
+        dest.writeInt(this.id);
+    }
+
+    protected WaterFieldType(Parcel in) {
+        int tmpFieldStatus = in.readInt();
+        this.fieldStatus = tmpFieldStatus == -1 ? null : FieldStatus.values()[tmpFieldStatus];
+        this.id = in.readInt();
+    }
+
+    public static final Creator<WaterFieldType> CREATOR = new Creator<WaterFieldType>() {
+        @Override
+        public WaterFieldType createFromParcel(Parcel source) {
+            return new WaterFieldType(source);
+        }
+
+        @Override
+        public WaterFieldType[] newArray(int size) {
+            return new WaterFieldType[size];
+        }
+    };
 }

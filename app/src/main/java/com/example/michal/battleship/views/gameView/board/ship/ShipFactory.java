@@ -2,7 +2,6 @@ package com.example.michal.battleship.views.gameView.board.ship;
 
 import com.example.michal.battleship.views.gameView.board.BoardField;
 import com.example.michal.battleship.views.gameView.board.fieldType.FieldStatus;
-import com.example.michal.battleship.views.gameView.board.fieldType.FieldType;
 import com.example.michal.battleship.views.gameView.board.fieldType.ShipFieldType;
 
 import java.util.stream.IntStream;

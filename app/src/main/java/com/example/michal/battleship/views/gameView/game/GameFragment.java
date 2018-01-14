@@ -12,6 +12,8 @@ import android.widget.FrameLayout;
 
 import com.example.michal.battleship.R;
 import com.example.michal.battleship.model.MoveDTO;
+import com.example.michal.battleship.model.PointsCalculator;
+import com.example.michal.battleship.model.Statistics;
 import com.example.michal.battleship.views.gameView.GameActivity;
 import com.example.michal.battleship.views.gameView.GameState;
 import com.example.michal.battleship.views.gameView.board.Board;
@@ -25,9 +27,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by michal on 18.12.17.
@@ -44,10 +43,6 @@ public class GameFragment extends Fragment {
     private BoardView myBoardView;
 
     private BoardView opponentBoardView;
-
-    private Statistics opponentStatistics;
-
-    private Statistics myStatistics;
 
     private PointsCalculator opponentPointsCalculator;
 
@@ -77,9 +72,9 @@ public class GameFragment extends Fragment {
     private void init() {
         createOpponentBoard();
         createMyBoard();
-        opponentStatistics = new Statistics(gameActivity.getOpponent().getUser().getCustomName());
+        gameActivity.getOpponent().setStatistics(new Statistics(gameActivity.getOpponent().getUser().getCustomName()));
         opponentPointsCalculator = new PointsCalculator();
-        myStatistics = new Statistics(gameActivity.getMe().getUser().getCustomName());
+        gameActivity.getMe().setStatistics(new Statistics(gameActivity.getMe().getUser().getCustomName()));
         myPointsCalculator = new PointsCalculator();
         setFirstMove(new Random(System.currentTimeMillis()).nextBoolean());
     }
@@ -98,15 +93,17 @@ public class GameFragment extends Fragment {
             if (event.getNewValue().equals(FieldStatus.HIT)) {
                 if (event.getPropertyName().equals(WaterFieldType.class.getSimpleName())) {
                     opponentPointsCalculator.hittedWater();
+                    gameActivity.getOpponent().getStatistics().waterHitted();
                     prepareForMyMove();
                 } else if (event.getPropertyName().equals(ShipFieldType.class.getSimpleName())) {
                     opponentPointsCalculator.hittedShip();
+                    gameActivity.getOpponent().getStatistics().shipHitted();
                     opponentPointsCalculator.setSunkedShipCount((int) myBoardView.getBoard().getShips().stream()
                             .filter(Ship::isSunken)
                             .count());
                     myShipHit();
                 }
-                opponentStatistics.addPoints(opponentPointsCalculator);
+                gameActivity.getOpponent().getStatistics().addPoints(opponentPointsCalculator);
             }
         });
         return new BoardView(getContext(), board);
@@ -159,15 +156,16 @@ public class GameFragment extends Fragment {
                 if (event.getPropertyName().equals(WaterFieldType.class.getSimpleName())) {
                     prepareForOpponentMove();
                     myPointsCalculator.hittedWater();
-                    new RetrieveMoveAsyncTask(this).execute();
+                    gameActivity.getMe().getStatistics().waterHitted();
                 } else if (event.getPropertyName().equals(ShipFieldType.class.getSimpleName())) {
                     myPointsCalculator.hittedShip();
+                    gameActivity.getMe().getStatistics().shipHitted();
                     myPointsCalculator.setSunkedShipCount((int) opponentBoardView.getBoard().getShips().stream()
                             .filter(Ship::isSunken)
                             .count());
                     opponentShipHit();
                 }
-                myStatistics.addPoints(myPointsCalculator);
+                gameActivity.getMe().getStatistics().addPoints(myPointsCalculator);
             }
         });
         return new BoardView(getContext(), board);
@@ -190,6 +188,7 @@ public class GameFragment extends Fragment {
         opponentBoardView.setBackgroundColor(getResources().getColor(R.color.boardViewBackgroundNormal, null));
         myBoardView.setBackgroundColor(getResources().getColor(R.color.boardViewBackgroundMove, null));
         opponentBoardView.getBoard().setActiveToAll(false);
+        new RetrieveMoveAsyncTask(this).execute();
     }
 
     private void prepareForMyMove() {

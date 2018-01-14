@@ -1,4 +1,4 @@
-package com.example.michal.battleship.views.gameView.game;
+package com.example.michal.battleship.model;
 
 /**
  * Created by michal on 14.01.18.

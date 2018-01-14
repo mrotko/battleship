@@ -102,4 +102,11 @@
     <string name="error_unknown">Unknown error</string>
     <string name="error_email_exists">Email exists</string>
     <string name="error_login">Wrong email or password</string>
+    <string name="percentChar">%</string>
+    <string name="playerName">Name</string>
+    <string name="shipFields">Ship fields</string>
+    <string name="waterFields">Water fields</string>
+    <string name="points">Points</string>
+    <string name="youWin">You win!</string>
+    <string name="youLose">You lose</string>
 </resources>

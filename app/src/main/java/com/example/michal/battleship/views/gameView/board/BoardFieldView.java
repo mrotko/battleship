@@ -2,13 +2,12 @@ package com.example.michal.battleship.views.gameView.board;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.example.michal.battleship.R;
 import com.example.michal.battleship.views.gameView.board.fieldType.FieldStatus;
-import com.example.michal.battleship.views.gameView.board.fieldType.FieldType;
+import com.example.michal.battleship.views.gameView.board.fieldType.IFieldType;
 
 import java.util.Optional;
 
@@ -52,7 +51,7 @@ public class BoardFieldView extends FrameLayout {
         redraw();
     }
 
-    public FieldType getFieldType() {
+    public IFieldType getFieldType() {
         return boardField.getFieldType();
     }
 

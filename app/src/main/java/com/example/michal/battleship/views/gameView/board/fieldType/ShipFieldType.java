@@ -1,8 +1,6 @@
 package com.example.michal.battleship.views.gameView.board.fieldType;
 
-import android.content.res.Resources;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
+import android.os.Parcel;
 
 import com.example.michal.battleship.R;
 import com.example.michal.battleship.model.SimpleObject;
@@ -10,9 +8,9 @@ import com.example.michal.battleship.model.SimpleObject;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class ShipFieldType extends SimpleObject implements FieldType {
+public class ShipFieldType extends SimpleObject implements IFieldType {
 
-    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    private transient final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     private FieldStatus fieldStatus = FieldStatus.VISIBLE;
 
@@ -71,4 +69,57 @@ public class ShipFieldType extends SimpleObject implements FieldType {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.fieldStatus == null ? -1 : this.fieldStatus.ordinal());
+        dest.writeInt(this.id);
+    }
+
+    protected ShipFieldType(Parcel in) {
+        int tmpFieldStatus = in.readInt();
+        this.fieldStatus = tmpFieldStatus == -1 ? null : FieldStatus.values()[tmpFieldStatus];
+        this.id = in.readInt();
+    }
+
+    public static final Creator<ShipFieldType> CREATOR = new Creator<ShipFieldType>() {
+        @Override
+        public ShipFieldType createFromParcel(Parcel source) {
+            return new ShipFieldType(source);
+        }
+
+        @Override
+        public ShipFieldType[] newArray(int size) {
+            return new ShipFieldType[size];
+        }
+    };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ShipFieldType)) return false;
+
+        ShipFieldType that = (ShipFieldType) o;
+
+        if (hiddenResourceId != that.hiddenResourceId) return false;
+        if (shipResourceId != that.shipResourceId) return false;
+        if (hitResourceId != that.hitResourceId) return false;
+        if (propertyChangeSupport != null ? !propertyChangeSupport.equals(that.propertyChangeSupport) : that.propertyChangeSupport != null)
+            return false;
+        return fieldStatus == that.fieldStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = propertyChangeSupport != null ? propertyChangeSupport.hashCode() : 0;
+        result = 31 * result + (fieldStatus != null ? fieldStatus.hashCode() : 0);
+        result = 31 * result + hiddenResourceId;
+        result = 31 * result + shipResourceId;
+        result = 31 * result + hitResourceId;
+        return result;
+    }
 }

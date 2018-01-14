@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout;
 
 import com.example.michal.battleship.R;
+import com.example.michal.battleship.auth.session.SessionService;
 import com.example.michal.battleship.connection.ConnectionServiceImpl;
 import com.example.michal.battleship.connection.IConnectionService;
 import com.example.michal.battleship.connection.communication.ICommunication;
@@ -76,7 +77,13 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void startEndGameFragment() {
-        startFragment(new EndGameFragment());
+        Fragment endGameFragment = new EndGameFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("opponentStatistics", opponent.getStatistics());
+        args.putParcelable("myStatistics", me.getStatistics());
+        endGameFragment.setArguments(args);
+
+        startFragment(endGameFragment);
     }
 
     public void setGameState(GameState gameState) {
@@ -175,10 +182,7 @@ public class GameActivity extends AppCompatActivity {
 
     private Player createMe() {
         Player me = new Player();
-        User user = new User();
-//        TODO dokończyć
-//        User user = new User();
-//        user.setId();
+        User user = (new SessionService()).getSessionManager(this).getUser();
         me.setUser(user);
         return me;
     }
