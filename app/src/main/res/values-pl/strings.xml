@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">battleship</string>
+    <string name="app_name">Gra w statki</string>
     <string name="vibration">Wibracje</string>
     <string name="settings">Ustawienia</string>
     <string name="sounds">Dźwięki</string>
@@ -12,4 +12,47 @@
     <string name="normal">Normalny</string>
     <string name="beginner">Początkujący</string>
     <string name="battleship">Gra w statki</string>
+    <string name="board_field">Pole</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Hasło (opcjonalnie)</string>
+    <string name="action_sign_in">Zaloguj się lub zarejestruj</string>
+    <string name="error_email">Błędny email</string>
+    <string name="login">Logowanie</string>
+    <string name="loginByGoogle">Logowanie Google</string>
+    <string name="error_field_required">Pole jest wymagane</string>
+    <string name="error_incorrect_password">Hasło jest błędne</string>
+    <string name="error_password">Minimum 8 znaków</string>
+    <string name="register">Rejestracja</string>
+    <string name="email">Email</string>
+    <string name="hashPass">Hasło</string>
+    <string name="loginError">Błędny email albo hasło</string>
+    <string name="repeatPassword">Powtórz hasło</string>
+    <string name="customName">Nazwa</string>
+    <string name="createAccount">Stwórz konto</string>
+    <string name="createAccountByGoogle">Zarejestruj przez Google</string>
+    <string name="playViaBluetooth">Graj przez Bluetooth</string>
+    <string name="searchOpponent">Szukaj przeciwnika</string>
+    <string name="opponentName">Przeciwnik</string>
+    <string name="autoArrange">Losuj</string>
+    <string name="reset">Reset</string>
+    <string name="start">Start</string>
+    <string name="putAllShipsOnBoard">Dodaj wszystkie statki na planszę</string>
+    <string name="hide">Ukryj</string>
+    <string name="nothingToDo">Nic do zrobienia</string>
+    <string name="end">Koniec</string>
+    <string name="revenge">Rewanż</string>
+    <string name="opponentLeftGame">Przeciwnik opuścił grę</string>
+    <string name="emptyCredentials">Uzupełnij dane</string>
+    <string name="error_empty">Pole nie może być puste</string>
+    <string name="error_repeat_password">Hasła są różne</string>
+    <string name="error_unknown">Nieznany błąd</string>
+    <string name="error_email_exists">Email istnieje</string>
+    <string name="error_login">Zły email lub hasło</string>
+    <string name="percentChar">%</string>
+    <string name="playerName">Nazwa</string>
+    <string name="shipFields">Pola okrętów</string>
+    <string name="waterFields">Pola wody</string>
+    <string name="points">Punkty</string>
+    <string name="youWin">Wygrałeś!</string>
+    <string name="youLose">Przegrałeś</string>
 </resources>

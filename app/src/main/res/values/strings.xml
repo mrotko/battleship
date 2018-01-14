@@ -108,5 +108,5 @@
     <string name="waterFields">Water fields</string>
     <string name="points">Points</string>
     <string name="youWin">You win!</string>
-    <string name="youLose">You lose</string>
+    <string name="youLose">You lose!</string>
 </resources>
