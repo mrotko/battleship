@@ -1,9 +1,6 @@
 package com.example.michal.battleship.views.gameView.board.fieldType;
 
-import android.content.res.Resources;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-
+import com.example.michal.battleship.R;
 import com.example.michal.battleship.model.SimpleObject;
 
 import java.beans.PropertyChangeListener;
@@ -15,16 +12,16 @@ public class WaterFieldType extends SimpleObject implements FieldType {
 
     private FieldStatus fieldStatus = FieldStatus.VISIBLE;
 
-    private Drawable hiddenDrawable;
+    private transient int hiddenResourceId;
 
-    private Drawable waterDrawable;
+    private transient int waterResourceId;
 
-    private Drawable hitDrawable;
+    private transient int hitResourceId;
 
     public WaterFieldType() {
-        hiddenDrawable = new ColorDrawable(Resources.getSystem().getColor(android.R.color.darker_gray, Resources.getSystem().newTheme()));
-        waterDrawable = new ColorDrawable(Resources.getSystem().getColor(android.R.color.holo_blue_dark, Resources.getSystem().newTheme()));
-        hitDrawable = new ColorDrawable(Resources.getSystem().getColor(android.R.color.holo_blue_light, Resources.getSystem().newTheme()));
+        hiddenResourceId = R.drawable.hidden_field;
+        waterResourceId = R.drawable.water;
+        hitResourceId = R.drawable.water_hit;
     }
 
     @Override
@@ -40,16 +37,16 @@ public class WaterFieldType extends SimpleObject implements FieldType {
     }
 
     @Override
-    public Drawable getDrawable() {
+    public int getDrawableResourceId() {
         switch (fieldStatus) {
             case HIT:
-                return hitDrawable;
+                return hitResourceId;
             case HIDDEN:
-                return hiddenDrawable;
+                return hiddenResourceId;
             case VISIBLE:
-                return waterDrawable;
+                return waterResourceId;
             default:
-                return null;
+                return R.drawable.hidden_field;
         }
     }
 

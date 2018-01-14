@@ -34,16 +34,16 @@ public class BoardFieldView extends FrameLayout {
         Optional.ofNullable(boardField.getFieldType())
                 .ifPresent(field -> {
                     field.hit();
-                    draw(field.getDrawable());
+                    draw(field.getDrawableResourceId());
                 });
     }
 
-    private void draw(Drawable drawable) {
-        fieldIv.setImageDrawable(drawable);
+    private void draw(int drawableResourceId) {
+        fieldIv.setImageResource(drawableResourceId);
     }
 
     public void redraw() {
-        draw(boardField.getFieldType().getDrawable());
+        draw(boardField.getFieldType().getDrawableResourceId());
     }
 
     public void setFieldStatus(FieldStatus fieldStatus) {

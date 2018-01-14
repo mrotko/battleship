@@ -11,7 +11,7 @@ public interface FieldType {
 
     FieldStatus getFieldStatus();
 
-    Drawable getDrawable();
+    int getDrawableResourceId();
 
     void addPropertyChangeListener(PropertyChangeListener propertyChangeListener);
 

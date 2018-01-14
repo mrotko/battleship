@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 
+import com.example.michal.battleship.R;
 import com.example.michal.battleship.model.SimpleObject;
 
 import java.beans.PropertyChangeListener;
@@ -15,16 +16,16 @@ public class ShipFieldType extends SimpleObject implements FieldType {
 
     private FieldStatus fieldStatus = FieldStatus.VISIBLE;
 
-    private transient Drawable hiddenDrawable;
+    private transient int hiddenResourceId;
 
-    private transient Drawable shipDrawable;
+    private transient int shipResourceId;
 
-    private transient Drawable hitDrawable;
+    private transient int hitResourceId;
 
     public ShipFieldType() {
-        hiddenDrawable = new ColorDrawable(Resources.getSystem().getColor(android.R.color.darker_gray, Resources.getSystem().newTheme()));
-        shipDrawable = new ColorDrawable(Resources.getSystem().getColor(android.R.color.holo_orange_dark, Resources.getSystem().newTheme()));
-        hitDrawable = new ColorDrawable(Resources.getSystem().getColor(android.R.color.holo_red_dark, Resources.getSystem().newTheme()));
+        hiddenResourceId = R.drawable.hidden_field;
+        shipResourceId = R.drawable.ship;
+        hitResourceId = R.drawable.ship_hit;
     }
 
 
@@ -41,16 +42,16 @@ public class ShipFieldType extends SimpleObject implements FieldType {
     }
 
     @Override
-    public Drawable getDrawable() {
+    public int getDrawableResourceId() {
         switch (fieldStatus) {
             case HIT:
-                return hitDrawable;
+                return hitResourceId;
             case HIDDEN:
-                return hiddenDrawable;
+                return hiddenResourceId;
             case VISIBLE:
-                return shipDrawable;
+                return shipResourceId;
             default:
-                return null;
+                return R.drawable.hidden_field;
         }
     }
 
