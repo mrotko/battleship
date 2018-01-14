@@ -69,7 +69,7 @@ public class ComputerNormalCommunication extends ComputerCommunication {
                     .collect(Collectors.toList());
         }
 
-        if(predictedFields.isEmpty()) {
+        if(predictedFields.isEmpty() || !onFire) {
             predictedFields = availableFields;
         }
 
