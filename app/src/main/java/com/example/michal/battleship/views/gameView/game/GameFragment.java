@@ -23,6 +23,9 @@ import com.example.michal.battleship.views.gameView.board.fieldType.WaterFieldTy
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by michal on 18.12.17.
@@ -104,7 +107,9 @@ public class GameFragment extends Fragment {
     }
 
     public void waitUntilTasksEnd() {
-        while (workingAsyncTasks.size() > 0) {}
+        while (workingAsyncTasks.size() > 0) {
+            workingAsyncTasks.get(0).cancel(true);
+        }
     }
 
     private void createOpponentBoard() {

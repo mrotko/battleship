@@ -39,7 +39,9 @@ public abstract class ComputerCommunication implements ICommunication {
 
     protected User user;
 
-    protected MoveDTO currentMove;
+    protected Random random;
+
+    protected List<Integer> availableFields = new ArrayList<>();
 
     protected ComputerCommunication() {
         init();
@@ -51,6 +53,10 @@ public abstract class ComputerCommunication implements ICommunication {
         opponent = new Player();
         opponent.setBoard(board);
         opponent.setUser(user);
+        random = new Random(System.currentTimeMillis());
+        availableFields = IntStream.range(0, opponent.getBoard().getRowLength() * opponent.getBoard().getColumnLength())
+                .boxed()
+                .collect(Collectors.toList());
     }
 
     private void initBoard() {
@@ -165,4 +171,44 @@ public abstract class ComputerCommunication implements ICommunication {
     }
 
     protected abstract MoveDTO calculateMove();
+
+    protected void removeFieldsAroundSunkedShip() {
+        me.getBoard().getShips().stream()
+                .filter(Ship::isSunken)
+                .forEach(ship -> {
+                    List<Integer> rowIdRange = new ArrayList<>();
+                    List<Integer> fieldIdRange = new ArrayList<>();
+                    BoardField shipHeadBoardField = ship.getFields().get(0);
+
+                    if(ship.getDirection().equals(Direction.VERTICAL)) {
+                        rowIdRange = IntStream.rangeClosed(shipHeadBoardField.getRowId() - 1, shipHeadBoardField.getRowId() + ship.getSize())
+                                .filter(id -> id >= 0)
+                                .filter(id -> id < board.getColumnLength())
+                                .boxed()
+                                .collect(Collectors.toList());
+                        fieldIdRange = IntStream.rangeClosed(shipHeadBoardField.getId() - 1, shipHeadBoardField.getId() + 1)
+                                .filter(id -> id >= 0)
+                                .filter(id -> id < board.getRowLength())
+                                .boxed()
+                                .collect(Collectors.toList());
+                    } else if(ship.getDirection().equals(Direction.HORIZONTAL)) {
+                        rowIdRange = IntStream.rangeClosed(shipHeadBoardField.getRowId() - 1, shipHeadBoardField.getRowId() + 1)
+                                .filter(id -> id >= 0)
+                                .filter(id -> id < board.getColumnLength())
+                                .boxed()
+                                .collect(Collectors.toList());
+                        fieldIdRange = IntStream.rangeClosed(shipHeadBoardField.getId() - 1, shipHeadBoardField.getId() + ship.getSize())
+                                .filter(id -> id >= 0)
+                                .filter(id -> id < board.getRowLength())
+                                .boxed()
+                                .collect(Collectors.toList());
+                    }
+
+                    for (Integer rowId : rowIdRange) {
+                        for(Integer fieldId : fieldIdRange) {
+                            availableFields.remove(Integer.valueOf(rowId * 10 + fieldId));
+                        }
+                    }
+                });
+    }
 }
