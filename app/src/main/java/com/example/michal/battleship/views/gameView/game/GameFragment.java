@@ -89,7 +89,7 @@ public class GameFragment extends Fragment {
         Board board = gameActivity.getMe().getBoard();
         board.setFieldStatusToAll(FieldStatus.VISIBLE);
         board.setActiveToAll(false);
-        board.setFieldStatusListener(event -> {
+        board.addFieldStatusListener(event -> {
             if (event.getNewValue().equals(FieldStatus.HIT)) {
                 if (event.getPropertyName().equals(WaterFieldType.class.getSimpleName())) {
                     opponentPointsCalculator.hittedWater();
@@ -151,7 +151,7 @@ public class GameFragment extends Fragment {
         Board board = new Board(gameActivity.getOpponent().getBoard().getShips());
         board.setFieldStatusToAll(FieldStatus.HIDDEN);
         board.setActiveToAll(true);
-        board.setFieldStatusListener(event -> {
+        board.addFieldStatusListener(event -> {
             if (event.getNewValue().equals(FieldStatus.HIT)) {
                 if (event.getPropertyName().equals(WaterFieldType.class.getSimpleName())) {
                     prepareForOpponentMove();

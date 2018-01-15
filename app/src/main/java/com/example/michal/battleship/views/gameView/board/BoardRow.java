@@ -24,11 +24,6 @@ public class BoardRow extends SimpleObject {
         return fields;
     }
 
-    public void setFields(List<BoardField> fields) {
-        this.fields = fields;
-    }
-
-
     @Override
     public int describeContents() {
         return 0;

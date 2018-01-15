@@ -23,10 +23,6 @@ public class Ship extends SimpleObject {
         return fields;
     }
 
-    public void setFields(List<BoardField> fields) {
-        this.fields = fields;
-    }
-
     public Direction getDirection() {
         return direction;
     }
@@ -45,11 +41,6 @@ public class Ship extends SimpleObject {
                 .allMatch(fieldType -> fieldType.getFieldStatus().equals(FieldStatus.HIT));
     }
 
-
-    public Ship() {
-    }
-
-
     @Override
     public int describeContents() {
         return 0;
@@ -62,7 +53,9 @@ public class Ship extends SimpleObject {
         dest.writeInt(this.id);
     }
 
-    protected Ship(Parcel in) {
+    public Ship() {}
+
+    private Ship(Parcel in) {
         this.fields = in.createTypedArrayList(BoardField.CREATOR);
         int tmpDirection = in.readInt();
         this.direction = tmpDirection == -1 ? null : Direction.values()[tmpDirection];

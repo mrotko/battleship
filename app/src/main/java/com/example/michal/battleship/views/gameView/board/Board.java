@@ -39,6 +39,7 @@ public class Board extends SimpleObject {
     }
 
     public void createTable() {
+        boardRows.clear();
         IntStream
                 .range(0, COLUMN_LENGTH)
                 .forEach(i -> boardRows.add(createBoardRow(i)));
@@ -99,7 +100,7 @@ public class Board extends SimpleObject {
                 .forEach(boardField -> boardField.setActive(active)));
     }
 
-    public void setFieldStatusListener(PropertyChangeListener propertyChangeListener) {
+    public void addFieldStatusListener(PropertyChangeListener propertyChangeListener) {
         boardRows.forEach(boardRow -> {
             boardRow.getFields().forEach(boardField -> {
                 boardField.getFieldType().addPropertyChangeListener(propertyChangeListener);
