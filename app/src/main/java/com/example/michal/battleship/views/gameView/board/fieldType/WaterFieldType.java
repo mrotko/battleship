@@ -14,11 +14,11 @@ public class WaterFieldType extends SimpleObject implements IFieldType {
 
     private FieldStatus fieldStatus = FieldStatus.VISIBLE;
 
-    private transient int hiddenResourceId;
+    private int hiddenResourceId;
 
-    private transient int waterResourceId;
+    private int waterResourceId;
 
-    private transient int hitResourceId;
+    private int hitResourceId;
 
     public WaterFieldType() {
         hiddenResourceId = R.drawable.hidden_field;
@@ -77,15 +77,12 @@ public class WaterFieldType extends SimpleObject implements IFieldType {
         if (hiddenResourceId != that.hiddenResourceId) return false;
         if (waterResourceId != that.waterResourceId) return false;
         if (hitResourceId != that.hitResourceId) return false;
-        if (propertyChangeSupport != null ? !propertyChangeSupport.equals(that.propertyChangeSupport) : that.propertyChangeSupport != null)
-            return false;
         return fieldStatus == that.fieldStatus;
     }
 
     @Override
     public int hashCode() {
-        int result = propertyChangeSupport != null ? propertyChangeSupport.hashCode() : 0;
-        result = 31 * result + (fieldStatus != null ? fieldStatus.hashCode() : 0);
+        int result = fieldStatus != null ? fieldStatus.hashCode() : 0;
         result = 31 * result + hiddenResourceId;
         result = 31 * result + waterResourceId;
         result = 31 * result + hitResourceId;
@@ -101,12 +98,18 @@ public class WaterFieldType extends SimpleObject implements IFieldType {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.fieldStatus == null ? -1 : this.fieldStatus.ordinal());
+        dest.writeInt(this.hiddenResourceId);
+        dest.writeInt(this.waterResourceId);
+        dest.writeInt(this.hitResourceId);
         dest.writeInt(this.id);
     }
 
     protected WaterFieldType(Parcel in) {
         int tmpFieldStatus = in.readInt();
         this.fieldStatus = tmpFieldStatus == -1 ? null : FieldStatus.values()[tmpFieldStatus];
+        this.hiddenResourceId = in.readInt();
+        this.waterResourceId = in.readInt();
+        this.hitResourceId = in.readInt();
         this.id = in.readInt();
     }
 
