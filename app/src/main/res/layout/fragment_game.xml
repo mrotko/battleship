@@ -7,18 +7,22 @@
     <FrameLayout
         android:id="@+id/flOpponent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="15dp">
+        android:layout_margin="15dp"
+        android:background="@drawable/background_current_move"
+        android:layout_weight="1">
 
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/flMe"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="15dp">
+        android:layout_margin="15dp"
+        android:background="@drawable/background_wait"
+        android:layout_weight="1">
 
     </FrameLayout>
 </LinearLayout>

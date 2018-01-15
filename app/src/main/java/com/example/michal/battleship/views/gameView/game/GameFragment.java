@@ -185,15 +185,16 @@ public class GameFragment extends Fragment {
     }
 
     private void prepareForOpponentMove() {
-        opponentBoardView.setBackgroundColor(getResources().getColor(R.color.boardViewBackgroundNormal, null));
-        myBoardView.setBackgroundColor(getResources().getColor(R.color.boardViewBackgroundMove, null));
+        opponentBoardView.setBackground(getResources().getDrawable(R.drawable.background_wait, null));
+        myBoardView.setBackground(getResources().getDrawable(R.drawable.background_current_move, null));
         opponentBoardView.getBoard().setActiveToAll(false);
         new RetrieveMoveAsyncTask(this).execute();
     }
 
     private void prepareForMyMove() {
-        opponentBoardView.setBackgroundColor(getResources().getColor(R.color.boardViewBackgroundMove, null));
-        myBoardView.setBackgroundColor(getResources().getColor(R.color.boardViewBackgroundNormal, null));
+        myBoardView.setBackground(getResources().getDrawable(R.drawable.background_wait, null));
+        opponentBoardView.setBackground(getResources().getDrawable(R.drawable.background_current_move, null));
+        opponentBoardView.setBackground(getResources().getDrawable(R.drawable.background_current_move, null));
         opponentBoardView.getBoard().setActiveToAll(true);
     }
 
