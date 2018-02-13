@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.michal.battleship.views.gameView.configureBoard.ConfigureBoardFragment">
+    tools:context="pl.rotkomichal.battleship.views.gameView.configureBoard.ConfigureBoardFragment">
 
     <LinearLayout
         android:id="@+id/gl_configure_board"

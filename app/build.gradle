@@ -5,7 +5,7 @@ apply plugin: 'jacoco'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.example.michal.battleship"
+        applicationId "pl.rotkomichal.battleship"
         minSdkVersion 24
         targetSdkVersion 27
         versionCode 1

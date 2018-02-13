@@ -6,7 +6,7 @@
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
     android:gravity="center"
-    tools:context="com.example.michal.battleship.views.MainActivity">
+    tools:context="pl.rotkomichal.battleship.views.MainActivity">
 
     <Button
         android:id="@+id/btnMenuPlay"
